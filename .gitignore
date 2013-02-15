@@ -1,0 +1,6 @@
+*.pyc
+*.log
+*.pot
+
+django/access/access/settings.py
+
