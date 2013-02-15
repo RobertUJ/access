@@ -1,0 +1,283 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Compra de Membresia {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+{% endblock extra_css %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+
+	        	<br><br>
+				<strong>{{ mensaje }}</strong>
+				<h1 class="mod-head"><span>Formulario de activación de membresia</span></h1>
+				<hr>
+				<div class="form-full">
+				<form action="" method="POST">
+					{% csrf_token %}
+					<!--{{frmR.as_p}}-->
+
+					<div class="span4">
+
+						<h3 class="mod-head">Crea tu Cuenta</h3>
+						<p>Debera crear un usuario y contraseña personalizados para el acceso al panel de control de su membresía.</p>
+				
+						<fieldset>
+							<div class="control-group {% if frmR.username.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmR.username.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmR.username }}
+									{% if frmR.username.errors %}
+										<span class="help-inline">{{frmR.username.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmR.password.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmR.password.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmR.password }}
+									{% if frmR.password.errors %}
+										<span class="help-inline">{{frmR.password.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmR.repassword.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmR.repassword.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmR.repassword }}
+									{% if frmR.repassword.errors %}
+										<span class="help-inline">{{frmR.repassword.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+							
+						</fieldset>
+
+					</div><!--ends crea tu cuenta-->
+					<div class="span4">
+						<h3 class="mod-head">Información de Poliza</h3>
+						<fieldset>
+						<div class="control-group {% if frmActiva.compania_seguros.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.compania_seguros.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.compania_seguros }}
+									{% if frmActiva.compania_seguros.errors %}
+										<span class="help-inline">{{frmActiva.compania_seguros.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.nombre_representante.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.nombre_representante.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.nombre_representante }}
+									{% if frmActiva.nombre_representante.errors %}
+										<span class="help-inline">{{frmActiva.nombre_representante.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.telefono_representante.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.telefono_representante.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.telefono_representante }}
+									{% if frmActiva.telefono_representante.errors %}
+										<span class="help-inline">{{frmActiva.telefono_representante.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.poliza.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.poliza.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.poliza }}
+									{% if frmActiva.poliza.errors %}
+										<span class="help-inline">{{frmActiva.poliza.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.tipo_poliza.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.tipo_poliza.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.tipo_poliza }}
+									{% if frmActiva.tipo_poliza.errors %}
+										<span class="help-inline">{{frmActiva.tipo_poliza.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.tipo_cobertura.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.tipo_cobertura.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.tipo_cobertura }}
+									{% if frmActiva.tipo_cobertura.errors %}
+										<span class="help-inline">{{frmActiva.tipo_cobertura.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.tipo_poliza_otro.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.tipo_poliza_otro.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.tipo_poliza_otro }}
+									{% if frmActiva.tipo_poliza_otro.errors %}
+										<span class="help-inline">{{frmActiva.tipo_poliza_otro.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+							<div class="control-group {% if frmActiva.fecha_vencimiento.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.fecha_vencimiento.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.fecha_vencimiento }}
+									{% if frmActiva.fecha_vencimiento.errors %}
+										<span class="help-inline">{{frmActiva.fecha_vencimiento.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+						</fieldset>
+					</div><!--Ends Información de Poliza-->
+
+					<div class="span4">
+						<h3 class="mod-head">Datos Médicos</h3>
+						<fieldset>
+		
+							<div class="control-group {% if frmActiva.contacto_emergencia_usa.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.contacto_emergencia_usa.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.contacto_emergencia_usa }}
+									{% if frmActiva.contacto_emergencia_usa.errors %}
+										<span class="help-inline">{{frmActiva.contacto_emergencia_usa.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.telefono_contacto_usa.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.telefono_contacto_usa.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.telefono_contacto_usa }}
+									{% if frmActiva.telefono_contacto_usa.errors %}
+										<span class="help-inline">{{frmActiva.telefono_contacto_usa.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.nombre_dr_mexico.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.nombre_dr_mexico.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.nombre_dr_mexico }}
+									{% if frmActiva.nombre_dr_mexico.errors %}
+										<span class="help-inline">{{frmActiva.nombre_dr_mexico.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.telefono_dr_mexico.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.telefono_dr_mexico.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.telefono_dr_mexico }}
+									{% if frmActiva.telefono_dr_mexico.errors %}
+										<span class="help-inline">{{frmActiva.telefono_dr_mexico.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.info_adicional_tx_center.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.info_adicional_tx_center.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.info_adicional_tx_center }}
+									{% if frmActiva.info_adicional_tx_center.errors %}
+										<span class="help-inline">{{frmActiva.info_adicional_tx_center.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.no_pasaporte.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.no_pasaporte.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.no_pasaporte }}
+									{% if frmActiva.no_pasaporte.errors %}
+										<span class="help-inline">{{frmActiva.no_pasaporte.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+							<div class="control-group {% if frmActiva.no_visa.errors %}error{% endif %}">
+								<label class="control-label">
+									{{frmActiva.no_visa.label_tag}}
+								</label>
+								<div class="controls">
+									{{ frmActiva.no_visa }}
+									{% if frmActiva.no_visa.errors %}
+										<span class="help-inline">{{frmActiva.no_visa.errors}}</span>
+									{% endif %}
+								</div>
+							</div>
+
+						</fieldset>
+
+					</div>
+
+					<!--{{frmActiva.as_p}}-->
+					<div class="full">
+					<input type="reset" value="Limpiar" class="reset">
+					<input type="submit" value="Actualizar Información" class="submit">
+				</div>
+				</form> 
+			</div><!--End-for-full-->
+			
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+ 
+{% block extra_js %}
+<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+
+<script>
+	$(document).on("ready",inicio);
+
+	function inicio(){
+		$("#id_fecha_vencimiento").datepicker();
+	}
+</script>
+{% endblock extra_js %}

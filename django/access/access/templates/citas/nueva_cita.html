@@ -1,0 +1,295 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Solicitar Cita {% endblock %}
+
+{% block extra_css %}
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+{% endblock extra_css %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+
+	        	<h1 class="mod-head"><span>Solicita una cita</span></h1>
+				<br><br>
+				<div class="form-full">
+				<form id="" action="." method="POST">
+					{% csrf_token %}
+
+					<div class="span5">
+						<fieldset>
+
+						<div class="control-group {% if form.es_titular.errors %}error{% endif %}">
+							<div class="controls check">
+							<label class="control-label">
+								{{form.es_titular.label_tag}}
+							</label>
+							
+								{{ form.es_titular }}
+								{% if form.es_titular.errors %}
+									<span class="help-inline">{{form.es_titular.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="rel_titular control-group {% if form.relacion_titular.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.relacion_titular.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.relacion_titular }}
+								{% if form.relacion_titular.errors %}
+									<span class="help-inline">{{form.relacion_titular.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="rel_titular control-group {% if form.nombre_completo.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.nombre_completo.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.nombre_completo }}
+								{% if form.nombre_completo.errors %}
+									<span class="help-inline">{{form.nombre_completo.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="rel_titular control-group {% if form.datos_contacto.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.datos_contacto.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.datos_contacto }}
+								{% if form.datos_contacto.errors %}
+									<span class="help-inline">{{form.datos_contacto.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+					<div class="position-two">
+						
+						<div class="control-group {% if form.fecha_cita.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.fecha_cita.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.fecha_cita }}
+								{% if form.fecha_cita.errors %}
+									<span class="help-inline">{{form.fecha_cita.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+						<div class="control-group nopad {% if form.preferencia.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.preferencia.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.preferencia }}
+								{% if form.preferencia.errors %}
+									<span class="help-inline">{{form.preferencia.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="control-group nopad {% if form.hora_cita.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.hora_cita.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.hora_cita }}
+								{% if form.hora_cita.errors %}
+									<span class="help-inline">{{form.hora_cita.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+						<div class="control-group {% if form.especialidad_cita.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.especialidad_cita.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.especialidad_cita }}
+								{% if form.especialidad_cita.errors %}
+									<span class="help-inline">{{form.especialidad_cita.errors}}</span>
+								{% endif %}
+								{% if form.especialidad_cita.help_text %}
+									<span class="help-inline">{{form.especialidad_cita.help_text}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="control-group motivos {% if form.motivos_cita.errors %}error{% endif %}">
+							<label class="control-label">
+								{{form.motivos_cita.label_tag}}
+							</label>
+							<div class="controls">
+								{{ form.motivos_cita }}
+								{% if form.motivos_cita.errors %}
+									<span class="help-inline">{{form.motivos_cita.errors}}</span>
+								{% endif %}
+								{% if form.motivos_cita.help_text %}
+									<span class="help-inline">{{form.motivos_cita.help_text}}</span>
+								{% endif %}
+							</div>
+						</div>
+
+						</fieldset>
+					</div>
+
+					<div class="span5">
+					<fieldset>
+
+					<div class="control-group {% if form.estudios_fechas.errors %}error{% endif %}">
+						<label class="control-label">
+							{{form.estudios_fechas.label_tag}}
+						</label>
+						<div class="controls">
+							{{ form.estudios_fechas }}
+							{% if form.estudios_fechas.errors %}
+								<span class="help-inline">{{form.estudios_fechas.errors}}</span>
+							{% endif %}
+						</div>
+					</div>					
+
+					<div class="control-group {% if form.uso_poliza.errors %}error{% endif %}">
+						<div class="controls check">
+						<label class="control-label">
+							{{form.uso_poliza.label_tag}}
+						</label>
+						
+							{{ form.uso_poliza }}
+							{% if form.uso_poliza.errors %}
+								<span class="help-inline">{{form.uso_poliza.errors}}</span>
+							{% endif %}
+						</div>
+					</div>
+
+
+					<div class="control-group {% if form.atendido_huston.errors %}error{% endif %}">
+						<div class="controls check">
+						<label class="control-label">
+							{{form.atendido_huston.label_tag}}
+						</label>
+							{{ form.atendido_huston }}
+							{% if form.atendido_huston.errors %}
+								<span class="help-inline">{{form.atendido_huston.errors}}</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="control-group {% if form.comentarios.errors %}error{% endif %}">
+						<label class="control-label">
+							{{form.comentarios.label_tag}}
+						</label>
+						<div class="controls">
+							{{ form.comentarios }}
+							{% if form.comentarios.errors %}
+								<span class="help-inline">{{form.comentarios.errors}}</span>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="control-group vuelo {% if form.info_vuelo.errors %}error{% endif %}">
+						<label class="control-label">
+							{{form.info_vuelo.label_tag}}
+						</label>
+						<div class="controls">
+							{{ form.info_vuelo }}
+							{% if form.info_vuelo.errors %}
+								<span class="help-inline">{{form.info_vuelo.errors}}</span>
+							{% endif %}
+						</div>
+					</div>
+
+					</fieldset>
+					
+					</div>
+					<div class="full-button">
+						<input id="btnEnviar" class="submit activa" type="submit" value="Solicitar Cita">						
+					</div>
+						<!--{{ form.as_p }}-->
+
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+
+{% block extra_js %}
+<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+<script >
+function oc(id,tf){
+	if(tf){
+		$("#" + id).hide().prev("label").hide();
+	}else{
+		$("#" + id).show().prev("label").show();
+	}
+}
+function oculta_muestra(){
+	var flag = $(this).is(":checked");
+	if(flag){
+		$(".rel_titular").fadeOut();
+	}else{
+		$(".rel_titular").fadeIn();
+	}
+}
+function muestra_otro(){
+	var valor = $(this).find("option:selected").text();
+	if (valor == "otros" || valor == "otro" || valor == "otra" || valor == "otras"){
+		$("#id_especialidad_cita_otra").show().prev("label").show();
+	}else{
+		$("#id_especialidad_cita_otra").hide().prev("label").hide();
+	}
+}
+function ocultaInfo(){
+	oc("id_donde",true);
+	oc("id_cuando",true);
+}
+function muestra_oculta(estado){
+	var flag = $(this).is(":checked");
+
+	if(flag){
+		oc("id_donde",false);
+		oc("id_cuando",false);
+	}else{
+		oc("id_donde",true);
+		oc("id_cuando",true);
+	}
+	
+}
+function check_edit(){
+	var flag_titular = $("#id_es_titular").is(':checked');
+	if( flag_titular ){
+			$(".rel_titular").hide();
+	}
+	{% if editar %}
+	var flag = 'true';
+	{% else %}
+	var flag = 'false';
+	{% endif %}
+	
+	if(flag == 'true'){
+		$("#btnEnviar").val("Guardar cambios");
+
+	}
+
+}
+function inicio(){
+	$("#id_es_titular").click();
+	$("#id_es_titular").on("click",oculta_muestra);
+	$("#id_especialidad_cita_otra").hide().prev("label").hide();
+	$("#id_especialidad_cita").on("change",muestra_otro);
+	ocultaInfo();
+	$("#id_atendido_huston").on("click",muestra_oculta);
+	check_edit()
+	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
+	$("#id_fecha_cita").datepicker({ dateFormat: "dd/mm/yy" });
+}
+
+$(document).on("ready",inicio);
+</script>
+{% endblock extra_js %}

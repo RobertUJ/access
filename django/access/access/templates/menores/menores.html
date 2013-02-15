@@ -1,0 +1,111 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Menores de edad {% endblock %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	    	<div class="span3">
+                <div id="cont_perfil">
+                    <div id="perfil_info">
+                        <div id="img_perfil">
+                            <img src=" {{ STATIC_URL }}images/user.png " alt="">
+                        </div>
+                        <div id="nombre_perfil">
+                           {{user.get_full_name}} 
+                            <a href="" title="">Editar</a> 
+                        </div>
+                    </div>
+                    <div id="menu_perfil">
+                        <ul class="nav nav-tabs nav-stacked">
+<li><a href=" {% url citas_view %} " class="citas activo">Citas</a></li>
+<li><a href="#" class="calendario">Calendario de Citas</a></li>
+<li><a href=" {% url ver_referidos %} " class="membresia">Miembros Adicionales</a></li>
+<li><a href="#" class="servicio">Servicios Externos</a></li>
+<li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
+<li><a href=" {% url menores_edad_view %} " class="menores">Menores de edad</a></li>
+
+                        </ul>   
+                    </div>
+                </div>
+	    	</div>
+	        <div class="span9 act-log">
+
+<div id="navegacion">
+  <a class="btn btn-danger" href=" {% url menores_edad_nuevo %} ">Agregar nuevo menor de edad</a>
+</div>
+
+	               <div class="listado-logs">
+<table class="acti" width="100%" border="0">
+<thead>
+<tr>
+    <th id="mCheck"> <input type="checkbox" id="main_check"> </th>
+      <th scope="col">Nombre</th>
+      <th scope="col">Apellido Paterno</th>
+      <th scope="col">Apellido Materno</th>
+      <th scope="col">Fecha Nacimiento</th>
+      <th scope="col">Relación </th>
+  </tr>
+</thead>
+<tbody id="cont_actividades_tr">
+  {% for m in objMenores   %}
+    <tr class="listado-log">
+      <td width="5%"><input type="checkbox" class="cCheck" value="{{a.id}}"> </td>
+      <td>{{m.nombre}}</td>
+      <td>{{m.apellido_paterno}}</td>
+      <td>{{m.apellido_materno}}</td>
+      <td class="act-fecha" width="20%">{{m.fecha_nacimiento|date:"D d M Y"}} </td>
+      <td>{{m.relacion}}</td>
+    </tr>
+  {% endfor %}
+</tbody>
+</table>
+                   </div>
+	        	
+	        </div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock contenido %}
+
+{% block extra_js %}
+<script type="text/javascript">
+function selectAll()
+{
+    $(".cCheck").attr("checked",this.checked);
+}
+function put_ids()
+{
+  var values = $('input:radio:checked.cCheck').map(function () {
+      return this.value;
+  }).get(); 
+
+for (var i = 0; i < values.length; i++) {
+ alert(values[i]);
+};
+
+  alert(values);
+
+}
+function get_actividades()
+{
+  // $("#objectID").load("test.php", { 'choices[]': ["Jon", "Susan"] } );
+  var input_ = $(this);
+  $(".rdo_filtro").parent().removeClass("activo");
+  input_.parent().addClass("activo");
+}
+
+function inicio()
+{
+  $("#btnMark").on("click",put_ids);
+  $(".rdo_filtro").on("click",get_actividades); 
+  $("#main_check").on("click",selectAll); 
+}
+
+
+$(document).on("ready",inicio);
+</script>
+{% endblock extra_js %}

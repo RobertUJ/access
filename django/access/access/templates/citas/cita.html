@@ -1,0 +1,91 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Solicitar Cita {% endblock %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+		<br><br>
+			<div class="row">
+				<div class="span12">
+					<h1 class="mod-head"><span>Información de la cita</span></h1>
+					<table class="table">
+						{# <caption>test</caption> #}
+						<thead>
+							<tr>
+								<th>Id</th>
+								<th>Membresía</th>
+                      <th>Usuario</th>
+								<th>Confirmada</th>
+								<th>Estado</th>
+								<th>Fecha</th>
+								<th>Especialidad</th>
+								<th>Otra Especialidad</th>
+								<th>Motivos Cita</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+						<td> {{ cita.id }}	</td>
+						<td>
+	                     <span>{{cita.no_membresia}}</span>   
+	                    </td>
+	                    <td>
+	                        <span>
+	                            {{cita.miembro}}
+	                        </span>
+	                    </td>
+						<td> 
+						{% if cita.confirmada %}
+            				<span class="confirmada msg_" title="Cita Confirmada">
+            					<img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+            				</span>
+            			{% else %}
+							<span class="no_confirmada msg_" title="Cita no confirmada">
+            					<img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+            				</span>
+                		{% endif %}
+                		 </td>
+                		 <td>
+						{% if cita.estado %}
+            				<span class="confirmada msg_" title="Cita Activa">
+            					<img  class="msg_" src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+            				</span>
+            			{% else %}
+							<span title="Cita inactiva o cancelada" class="no_confirmada msg_">
+            					<img    src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+            				</span>
+                		{% endif %}
+                		 </td>
+                		 <td>
+							{% if cita.confirmada %}
+								<span class="label label-success">{{ cita.fecha|date:"D d M Y P" }}</span>
+							{% else %}
+								<span class="label">{{ cita.fecha|date:"D d M Y P" }}</span>	
+							{% endif %}
+                		 </td>
+                		 <td>
+                		 	<p>{{ cita.especialidad_cita }}</p>
+                		 </td>
+                		 <td>
+                		 	<p>{{ cita.especialidad_cita_otra }}</p>
+                		 </td>
+                		 <td>
+                		 	<p>{{ cita.motivos_cita }}</p>
+                		 </td>
+						</tr>
+						</tbody>
+					</table>
+					
+					
+				</div>					
+				<hr>
+			</div>
+
+	</div>
+</div>
+{% endblock contenido %}
+
+{% block extra_js %}
+	
+{% endblock extra_js %}

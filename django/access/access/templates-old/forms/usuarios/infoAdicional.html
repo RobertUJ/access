@@ -1,0 +1,22 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Contact Form {% endblock %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        <div class="span12">
+<br><br>
+
+<form action="." method="POST">
+	{% csrf_token %}
+	{{ formAdicional.as_p }}
+	<input class="red" type="submit" value="Guardar informacion adicional">
+</form>
+
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+

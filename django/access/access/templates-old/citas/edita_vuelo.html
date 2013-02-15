@@ -1,0 +1,21 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Solicitar Cita {% endblock %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        <div class="span12">
+	        	<h1 class="mod-head"><span>Información de vuelo</span></h1>
+				<br><br>
+				<form id="frmCita" action="." method="POST">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<input id="btnEnviar" class="btn btn-danger" type="submit" value="Guardar info de vuelo">
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}

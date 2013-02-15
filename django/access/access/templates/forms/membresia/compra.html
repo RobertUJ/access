@@ -1,0 +1,301 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Compra de Membresia {% endblock %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        
+	        	<h1 class="mod-head"><span id="msg">Compra de membresia Call Center</span></h1>
+	        	<div class="form-full">
+				<form action="" method="POST">
+					{% csrf_token %}
+				<div class="span4">
+				<fieldset>
+					
+				
+				<!-- *********************************  -->
+				<h3 class="mod-head">Nombre completo</h3>
+								
+				<div style="display:none;" class="control-group {% if form.tipo.errors %}error{% endif %}">
+					<label class="control-label">
+						{{form.tipo.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.tipo }}
+						{% if form.tipo.errors %}
+							<span class="help-inline">{{form.tipo.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.nombre.errors %}error{% endif %}">
+					<label class="control-label {% if form.nombre.errors %}error{% endif %}">
+						{{form.nombre.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.nombre }}
+						{% if form.nombre.errors %}
+							<span class="help-inline">{{form.nombre.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.apellido_paterno.errors %}error{% endif %}">
+					<label class="control-label {% if form.apellido_paterno.errors %}error{% endif %}">
+						{{form.apellido_paterno.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.apellido_paterno }}
+						{% if form.apellido_paterno.errors %}
+							<span class="help-inline">{{form.apellido_paterno.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.apellido_materno.errors %}error{% endif %}">
+					<label class="control-label {% if form.apellido_materno.errors %}error{% endif %}">
+						{{form.apellido_materno.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.apellido_materno }}
+						{% if form.apellido_materno.errors %}
+							<span class="help-inline">{{form.apellido_materno.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="span4">
+				<h3 class="mod-head">Domicilio para envio de documentos</h3>
+				<div class="control-group {% if form.calle.errors %}error{% endif %}">
+					<label class="control-label {% if form.calle.errors %}error{% endif %}">
+						{{form.calle.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.calle }}
+						{% if form.calle.errors %}
+							<span class="help-inline">{{form.calle.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="position-two">
+				<div class="control-group {% if form.no_exterior.errors %}error{% endif %}">
+					<label class="control-label {% if form.no_exterior.errors %}error{% endif %}">
+						{{form.no_exterior.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.no_exterior }}
+						{% if form.no_exterior.errors %}
+							<span class="help-inline">{{form.no_exterior.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group nopad {% if form.no_interior.errors %}error{% endif %}">
+					<label class="control-label {% if form.no_interior.errors %}error{% endif %}">
+						{{form.no_interior.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.no_interior }}
+						{% if form.no_interior.errors %}
+							<span class="help-inline">{{form.no_interior.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+				<div class="control-group {% if form.colonia.errors %}error{% endif %}">
+					<label class="control-label {% if form.colonia.errors %}error{% endif %}">
+						{{form.colonia.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.colonia }}
+						{% if form.colonia.errors %}
+							<span class="help-inline">{{form.colonia.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.municipio.errors %}error{% endif %}">
+					<label class="control-label {% if form.municipio.errors %}error{% endif %}">
+						{{form.municipio.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.municipio }}
+						{% if form.municipio.errors %}
+							<span class="help-inline">{{form.municipio.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.ciudad.errors %}error{% endif %}">
+					<label class="control-label {% if form.ciudad.errors %}error{% endif %}">
+						{{form.ciudad.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.ciudad }}
+						{% if form.ciudad.errors %}
+							<span class="help-inline">{{form.ciudad.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="position-two">
+				<div class="control-group {% if form.cp.errors %}error{% endif %}">
+					<label class="control-label {% if form.cp.errors %}error{% endif %}">
+						{{form.cp.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.cp }}
+						{% if form.cp.errors %}
+							<span class="help-inline">{{form.cp.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group nopad {% if form.pais.errors %}error{% endif %}">
+					<label class="control-label {% if form.pais.errors %}error{% endif %}">
+						{{form.pais.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.pais }}
+						{% if form.pais.errors %}
+							<span class="help-inline">{{form.pais.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+				<!-- *********************************  -->
+
+				</fieldset>
+			</div>
+<div class="span4">
+	<h3 class="mod-head">Datos de contacto</h3>
+				<fieldset>
+
+
+				<div class="control-group {% if form.email.errors %}error{% endif %}">
+					<label class="control-label {% if form.email.errors %}error{% endif %}">
+						{{form.email.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.email }}
+						{% if form.email.errors %}
+							<span class="help-inline">{{form.email.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				
+				<div class="control-group {% if form.re_email.errors %}error{% endif %}">
+					<label class="control-label {% if form.re_email.errors %}error{% endif %}">
+						{{form.re_email.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.re_email }}
+						{% if form.re_email.errors %}
+							<span class="help-inline">{{form.re_email.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+			<div class="position-two">
+				
+				<div class="control-group area {% if form.area.errors %}error{% endif %}">
+					<label class="control-label {% if form.area.errors %}error{% endif %}">
+						{{form.area.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.area }}
+						{% if form.area.errors %}
+							<span class="help-inline">{{form.area.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="control-group lada {% if form.lada.errors %}error{% endif %}">
+					<label class="control-label {% if form.lada.errors %}error{% endif %}">
+						{{form.lada.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.lada }}
+						{% if form.lada.errors %}
+							<span class="help-inline">{{form.lada.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				
+			</div>				
+
+			<div class="control-group {% if form.telefono.errors %}error{% endif %}">
+					<label class="control-label {% if form.telefono.errors %}error{% endif %}">
+						{{form.telefono.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.telefono }}
+						{% if form.telefono.errors %}
+							<span class="help-inline">{{form.telefono.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				</fieldset>
+</div>
+
+
+					<!--{{form.as_p}}-->
+					<div class="full">
+					<input type="reset" value="Limpiar" class="reset">
+					<input type="submit" value="Comprar" Class="submit compra">
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+{% block extra_js %}
+
+<script type="text/javascript">
+function soloNumeros(evt){
+	//asignamos el valor de la tecla a keynum
+	if(window.event){// IE
+		keynum = evt.keyCode;
+	}else{
+		keynum = evt.which;
+	}
+	//comprobamos si se encuentra en el rango
+	if(keynum>47 && keynum<58){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function inicio()
+{
+	$("#id_tipo").val({{tipo}});
+	var texto = $("#id_tipo").find("option:selected").text();
+	$("#msg").html("Compra de membresia Call Center " + texto);
+
+	$("#id_cp").attr("maxlength","5");
+	$("#id_area").attr("maxlength","3");
+	$("#id_lada").attr("maxlength","3");
+	$("#id_telefono").attr("maxlength","8");
+
+
+	$("#id_cp").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_lada").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_area").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_telefono").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+}
+$(document).on("ready",inicio);
+
+
+
+</script>	
+{% endblock extra_js %}

@@ -1,0 +1,8 @@
+  {% for a in acts   %}
+    <tr class="listado-log">
+      <td width="5%"><input type="checkbox" class="mCheck" value="{{a.id}}"> </td>
+      <td width="70%">{{a.actividad}}</td>
+      <td class="act-fecha" width="20%">{{a.fecha|date:"D d M Y P"}} </td>
+      <td width="5%" > <a href=" {% url actividad_view a.id %} "><span class="ver_mas_act"></span></a></td>
+    </tr>
+  {% endfor %}

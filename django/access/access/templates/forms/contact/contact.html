@@ -1,0 +1,32 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Contact Form {% endblock %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        <div class="span12">
+	        	<h1 class="mod-head"><span>Contacto</span></h1>
+			{% if info_send %}
+				Thank you for contacting us, we will contact you.
+				<br>
+				Your message is:<br>
+					<p>Name: {{name}}</p>
+					<p>Email: {{email}}</p>
+					<p>Subject: {{subject}}</p>
+					<p>Content: {{content}}</p>
+			{% else %}
+			<br><br>
+				<form action="." method="POST">
+					{% csrf_token %}
+					{{form.as_p}}
+					<input type="submit" value="Submit" Class="submit send">
+					<input type="reset" value="Clear" class="reset">
+				</form>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+

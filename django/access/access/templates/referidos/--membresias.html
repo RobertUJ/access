@@ -1,0 +1,173 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Membresias adicionales {% endblock %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	    	<div class="span3">
+                <div id="cont_perfil">
+                    <div id="perfil_info">
+                        <div id="img_perfil">
+                            <img src=" {{ STATIC_URL }}images/user.png " alt="">
+                        </div>
+                        <div id="nombre_perfil">
+                           {{user.get_full_name}} 
+                            <a href="" title="">Editar</a> 
+                        </div>
+                    </div>
+                    <div id="menu_perfil">
+                        <ul class="nav nav-tabs nav-stacked">
+                            <li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
+                            <li><a href="#" class="calendario">Calendario</a></li>
+                            <li><a href="#" class="servicio">Servicios</a></li>
+                            <li><a href=" {% url citas_view %} " class="citas">Citas</a></li>
+                            <li><a href=" {% url ver_referidos %} " class="membresia activo">Membresías Adicionales</a></li>
+                            <li><a href=" {% url menores_edad_view %} " class="menores">Menores de edad</a></li>
+
+                        </ul>   
+                    </div>
+                </div>
+	    	</div>
+	        <div class="span9">
+                <h1 class="mod-head"><span>Membresías Adicionales</span></h1>
+                <div>
+                  <div id="cont_form_accion">
+                    <span>Membresias:  {{objRel|length}} de 9</span>
+                  </div>
+	        	  
+
+                  <a class="btn btn-danger pull-right" href=" {% url compra_referido_view %} ">Comprar membresias adicionales</a>
+                    
+                </div>
+            	<hr>
+
+			<table class="table table-hover">
+	            <thead>
+	                <tr>
+                    <th>Membresía</th>
+                      <th>Fecha Compra</th>
+	                  <th>Pagada</th>
+	                  <th>Activa</th>
+	                  <th>Nombre Completo Referido</th>
+                    </tr>
+	            </thead>
+	            <tbody>
+
+                {% for r in objRel  %}
+                <tr>
+                	<td>
+                     <span>{{r.mem_referido}}</span>   
+                    </td>
+                    <td>
+                        <span>
+                            {{r.mem_referido.fecha_registro|date:"D d M Y"}}
+                        </span>
+                    </td>
+                    <td>
+
+                		{% if r.mem_referido.pagada %}
+                            <span class="confirmada msg_" title="Membresia Pagada">
+                                <img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+                            </span>
+                        {% else %}
+                            <span class="no_confirmada msg_" title="Membresia no Pagada">
+                                <img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+                            </span>
+                        {% endif %}
+
+                	</td>
+                	<td>
+                		{% if r.mem_referido.activa %}
+            				<span class="confirmada msg_" title="Membresia Activa">
+            					<img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+            				</span>
+            			{% else %}
+							<span class="no_confirmada msg_" title="Membresia Inactiva">
+            					<img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+            				</span>
+                		{% endif %}
+                		
+                	</td>
+                	<td>
+                		<span> {{ r.mem_referido.nombre|upper }} {{ r.mem_referido.apellido_paterno|upper }} {{ r.mem_referido.apellido_materno|upper }} </span>
+                	</td>
+                </tr>
+	        
+	        	{% endfor %}
+	            </tbody>
+            </table>
+
+	        	
+	        </div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock contenido %}
+
+{% block extra_js %}
+<script>
+function accion_btn(e)
+{
+    e.preventDefault();
+    var frmEnvio = $("#frmAccion");
+    var numSel = $(".sel_check:checked").length;
+    if(numSel < 1 )
+    {
+        alert("Selecciona una cita por favor.");
+        return false;
+    }
+    var valor = $("#id_accion").val();
+    switch(valor){
+        case 'del':
+            var flag = confirm("¿Seguro que quiere elminiar estas solicitudes de citas?");
+            if( flag  ){
+                frmEnvio.submit(); 
+            }else{
+                return false;
+            }            
+            break;
+        case 'edit':
+            if (numSel > 1){
+                alert("No puedes editar mas de una cita a la vez. Seleeciona solo una.");
+                return false;
+            }else{
+               frmEnvio.submit(); 
+            }
+            break;
+        case 'look':
+                frmEnvio.submit(); 
+            break;
+        case '--':
+                alert('Seleccione una acción por favor.');
+            break;
+        default:
+            break; 
+    }
+}
+function selectAll()
+{
+    $(".sel_check").attr("checked",this.checked);
+}
+function inicio()
+{
+    var texto = "";
+    $('.msg_').tooltip();
+    $("#btnAccion").on("click", accion_btn);
+    $("#sel_all").on("click",selectAll);
+    
+    $('.vuelo_info').on("mouseenter",function(){
+        texto = $(this).text();
+        $(this).text("Editar");
+    }).on("mouseleave",function(){
+        $(this).text(texto);
+    });
+}
+
+$(document).on("ready",inicio);
+
+</script>
+{% endblock extra_js %}
