@@ -34,9 +34,10 @@
 
 <div id="navegacion">
   <a class="btn btn-danger" href=" {% url menores_edad_nuevo %} ">Agregar nuevo menor de edad</a>
+  <a class="btn btn-danger" href=" {% url compra_pase_view %} ">Comprar pase para menor de edad</a>
 </div>
 
-	               <div class="listado-logs">
+<div class="listado-logs">
 <table class="acti" width="100%" border="0">
 <thead>
 <tr>
@@ -46,6 +47,7 @@
       <th scope="col">Apellido Materno</th>
       <th scope="col">Fecha Nacimiento</th>
       <th scope="col">Relación </th>
+      <th scope="col">Pase</th>
   </tr>
 </thead>
 <tbody id="cont_actividades_tr">
@@ -57,6 +59,7 @@
       <td>{{m.apellido_materno}}</td>
       <td class="act-fecha" width="20%">{{m.fecha_nacimiento|date:"D d M Y"}} </td>
       <td>{{m.relacion}}</td>
+      <td>{{m.pase_menor__date}}</td>
     </tr>
   {% endfor %}
 </tbody>

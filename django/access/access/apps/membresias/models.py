@@ -91,6 +91,12 @@ class menores_edad(models.Model):
 	def __unicode__(self):
 		return ("%s %s %s")%(self.nombre, self.apellido_materno,self.apellido_paterno)
 
+class pase_menor(models.Model):
+	titular = models.ForeignKey(User,related_name='Titular pase menor edad')
+	menor   = models.ManyToManyField(menores_edad)
+	fecha   = models.DateField(auto_now_add=True) 
+	def __unicode__(self):
+		return ("%s %s %s")%(self.menor.nombre, self.menor.apellido_materno,self.menor.apellido_paterno)
 
 
 class rel_mem(models.Model):

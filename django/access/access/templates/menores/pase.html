@@ -1,0 +1,117 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Comprar Pase para menor {% endblock %}
+
+{% block contenido %}
+<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        	<h1 class="mod-head"><span>Comprar pase para menor de edad</span></h1>
+				<br><br>
+				<div class="form-full">
+				<div class="center-menor">
+				<form id="" action="" method="POST">
+					{% csrf_token %}
+					<fieldset>
+						<h3 class="mod-head">Compra de pase para un año</h3>
+					
+					{% for f in form  %}
+						<div class="control-group  {% if f.errors %}error{% endif %}">
+							<label class="control-label">
+								{{f.label_tag}}
+							</label>
+							<div class="controls">
+								{{ f }}
+								{% if f.errors %}
+									<span class="help-inline">{{f.errors}}</span>
+								{% endif %}
+							</div>
+						</div>
+					{% endfor %}
+				
+					</fieldset>
+					</div>
+					</div>
+					<div class="full-button">
+						<input id="btnEnviar" class="submit activa" type="submit" value="Comprar pase">						
+					</div>
+						<!--{{ form.as_p }}-->
+
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+
+{% block extra_js %}
+<script >
+function oc(id,tf){
+	if(tf){
+		$("#" + id).hide().prev("label").hide();
+	}else{
+		$("#" + id).show().prev("label").show();
+	}
+}
+function oculta_muestra(){
+	var flag = $(this).is(":checked");
+	if(flag){
+		$(".rel_titular").fadeOut();
+	}else{
+		$(".rel_titular").fadeIn();
+	}
+}
+function muestra_otro(){
+	var valor = $(this).find("option:selected").text();
+	if (valor == "otros" || valor == "otro" || valor == "otra" || valor == "otras"){
+		$("#id_especialidad_cita_otra").show().prev("label").show();
+	}else{
+		$("#id_especialidad_cita_otra").hide().prev("label").hide();
+	}
+}
+function ocultaInfo(){
+	oc("id_donde",true);
+	oc("id_cuando",true);
+}
+function muestra_oculta(estado){
+	var flag = $(this).is(":checked");
+
+	if(flag){
+		oc("id_donde",false);
+		oc("id_cuando",false);
+	}else{
+		oc("id_donde",true);
+		oc("id_cuando",true);
+	}
+	
+}
+function check_edit(){
+	var flag_titular = $("#id_es_titular").is(':checked');
+	if( flag_titular ){
+			$(".rel_titular").hide();
+	}
+	{% if editar %}
+	var flag = 'true';
+	{% else %}
+	var flag = 'false';
+	{% endif %}
+	
+	if(flag == 'true'){
+		$("#btnEnviar").val("Guardar cambios");
+
+	}
+
+}
+function inicio(){
+	$("#id_es_titular").on("click",oculta_muestra);
+	$("#id_especialidad_cita_otra").hide().prev("label").hide();
+	$("#id_especialidad_cita").on("change",muestra_otro);
+	ocultaInfo();
+	$("#id_atendido_huston").on("click",muestra_oculta);
+	check_edit()
+}
+
+$(document).on("ready",inicio);
+</script>
+{% endblock extra_js %}
