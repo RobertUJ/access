@@ -75,15 +75,14 @@ class membresia(models.Model):
 	def __unicode__(self):
 		return "%s"%(self.id) 
 
-class menores_edad(models.Model):
-	titular          = models.ForeignKey(User,related_name="Menores de Edad de menor")
-	mem_titular      = models.ForeignKey(membresia,related_name="Membresia Titular de menor")
+class MenoresEdad(models.Model):
+	titular          = models.ForeignKey(User,related_name="Titulares")
+	mem_titular      = models.ForeignKey(membresia,related_name="MemTitulares")
 	nombre           = models.CharField(max_length=150,verbose_name="Nombre")
 	apellido_paterno = models.CharField(max_length=150,verbose_name="Apellido Paterno")
 	apellido_materno = models.CharField(max_length=150,verbose_name="Apellido Materno")
 	fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
 	relacion 		 = models.CharField(max_length=100,verbose_name="Relación con el titular")
-
 	class Meta:
 		verbose_name = 'Menor de edad'
 		verbose_name_plural = 'Menores de edad'
@@ -91,10 +90,12 @@ class menores_edad(models.Model):
 	def __unicode__(self):
 		return ("%s %s %s")%(self.nombre, self.apellido_materno,self.apellido_paterno)
 
-class pase_menor(models.Model):
-	titular = models.ForeignKey(User,related_name='Titular pase menor edad')
-	menor   = models.ManyToManyField(menores_edad)
-	fecha   = models.DateField(auto_now_add=True) 
+class PaseMenor(models.Model):
+	titular 		= models.ForeignKey(User,related_name='PasesTitulares')
+	menor   		= models.ForeignKey(MenoresEdad,related_name='Pases',verbose_name="Seleccione el menor de edad")
+	fecha_inicio    = models.DateField() 
+	fecha_fin   	= models.DateField() 
+	
 	def __unicode__(self):
 		return ("%s %s %s")%(self.menor.nombre, self.menor.apellido_materno,self.menor.apellido_paterno)
 

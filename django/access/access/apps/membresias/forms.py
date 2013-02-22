@@ -2,7 +2,7 @@
 from django import forms
 from django.db import models
 from django.forms import ModelForm
-from access.apps.membresias.models import membresia,info_adicional,menores_edad,pase_menor
+from access.apps.membresias.models import membresia,info_adicional,MenoresEdad,PaseMenor
 from django.contrib.auth.models import User
 from django.forms import ModelChoiceField
 from django.core import validators
@@ -43,13 +43,13 @@ class frmCompraAdicional(forms.ModelForm):
 		
 class frmMenoresEdad(forms.ModelForm):
 	class Meta:
-		model = menores_edad
+		model = MenoresEdad
 		exclude =['titular','mem_titular',]
 
 class frmPaseMenor(forms.ModelForm):
 	class Meta:
-		model = pase_menor
-		exclude = ['titular',]
+		model = PaseMenor
+		exclude = ['titular','fecha_inicio','fecha_fin']
 
 
 

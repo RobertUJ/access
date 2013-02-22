@@ -59,7 +59,17 @@
       <td>{{m.apellido_materno}}</td>
       <td class="act-fecha" width="20%">{{m.fecha_nacimiento|date:"D d M Y"}} </td>
       <td>{{m.relacion}}</td>
-      <td>{{m.pase_menor__date}}</td>
+      <td>
+          {% for pase in m.Pases.all   %}
+              {% if pase.fecha_fin > fecha_hoy  %}
+                {{pase.fecha_fin}} 
+              {% elif pase.fecha_fin < fecha_hoy %}
+                Pase Vencido
+              {% endif %}
+          {% empty %}
+                No tiene Pase    
+          {% endfor %}
+      </td>
     </tr>
   {% endfor %}
 </tbody>

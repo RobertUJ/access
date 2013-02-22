@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 #Modelos 
 from django.contrib.auth.models import User
-from access.apps.membresias.models import membresia,rel_mem,menores_edad,pase_menor
+from access.apps.membresias.models import membresia,rel_mem,MenoresEdad,PaseMenor
 from access.apps.actividades.models import actividad
 # Formularios
 from access.apps.membresias.forms import frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
@@ -266,9 +266,10 @@ def _envia_email_menores(objUser,menor):
 
 @login_required
 def menores_edad_all(request):
-	_objMenores = menores_edad.objects.filter(titular=request.user)
-	_objMenores.query.as_sql()
-	ctx = {'objMenores':_objMenores}
+	from datetime import date,timedelta
+	qs = MenoresEdad.objects.prefetch_related('Pases').filter(titular=request.user)
+
+	ctx = {'objMenores':qs,'fecha_hoy':date.today()}
 	return render_to_response('menores/menores.html',ctx,context_instance=RequestContext(request))
 
 @login_required
@@ -278,8 +279,7 @@ def menores_edad_nuevo(request):
 		if frm.is_valid():
 			_frm = frm.save(commit=False)
 			_frm.titular = request.user
-			print request.user
-
+			
 			mem = membresia.objects.get(miembro=request.user)
 			try:
 				mem = membresia.objects.get(miembro=request.user)
@@ -304,12 +304,23 @@ def menores_edad_nuevo(request):
 
 @login_required
 def compra_pase(request):
-	_menores = menores_edad.objects.filter(titular=request.user)
+	from datetime import date,timedelta
+
+	_menores = MenoresEdad.objects.filter(titular=request.user)
 	if request.method == "POST":
 		frm = frmPaseMenor(request.POST)
 		if frm.is_valid():
 			_frm = frm.save(commit=False)
+			
+			#  Obtengo fecha actual y se le suma un año
+			_hoy = date.today()
+			_anio = _hoy.year + 1
+			_fin = _hoy.replace(_anio,_hoy.month,_hoy.day)
+
+			# Asignacion de valores a las variables
 			_frm.titular = request.user
+			_frm.fecha_inicio = _hoy
+			_frm.fecha_fin = _fin
 			_frm.save()
 			
 			_envia_email_menores_pase(request.user,_frm)
