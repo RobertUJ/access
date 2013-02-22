@@ -2,7 +2,7 @@
 from django import forms
 from django.db import models
 from django.forms import ModelForm
-from access.apps.membresias.models import membresia,info_adicional,menores_edad
+from access.apps.membresias.models import membresia,info_adicional,MenoresEdad,PaseMenor
 from django.contrib.auth.models import User
 from django.forms import ModelChoiceField
 from django.core import validators
@@ -20,13 +20,38 @@ class frmCompraMembresiaCallCenter(forms.ModelForm):
 
 	class Meta:
 		model = membresia
+		fields = ['tipo', 'nombre','apellido_paterno','apellido_materno','email','re_email',]
+		# exclude = [ 'call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
+
+
+class frmCompraAdicional(forms.ModelForm):
+	def clean(self):
+		''' Required custom validation for the form. '''
+		super(ModelForm,self).clean()
+		if 'email' in self.cleaned_data and 're_email' in self.cleaned_data:
+			if self.cleaned_data.get('email') != self.cleaned_data.get('re_email'):
+				self._errors['email'] = self.error_class([u'Los campos de correos electrónico deben coincidir.'])
+				self._errors['re_email'] = self.error_class([u'Los campos de correos electrónico deben coincidir.'])
+		return self.cleaned_data
+
+	class Meta:
+		model = membresia
 		exclude = ['call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
+
+
+
 
 		
 class frmMenoresEdad(forms.ModelForm):
 	class Meta:
-		model = menores_edad
+		model = MenoresEdad
 		exclude =['titular','mem_titular',]
+
+class frmPaseMenor(forms.ModelForm):
+	class Meta:
+		model = PaseMenor
+		exclude = ['titular','fecha_inicio','fecha_fin']
+
 
 
 

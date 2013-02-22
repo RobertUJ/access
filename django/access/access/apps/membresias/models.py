@@ -36,21 +36,21 @@ class membresia(models.Model):
 	apellido_paterno 		= models.CharField(verbose_name='Apellido Paterno', max_length=100)
 	apellido_materno 	 	= models.CharField(verbose_name="Apellido Materno", max_length=255)
 
-	calle  					= models.CharField(verbose_name='Calle',max_length=100)
-	no_exterior				= models.CharField(verbose_name="No. Exterior",max_length=10)
+	calle  					= models.CharField(verbose_name='Calle',max_length=100,null=True,blank=True)
+	no_exterior				= models.CharField(verbose_name="No. Exterior",max_length=10,null=True,blank=True)
 	no_interior	 			= models.CharField(verbose_name='No. Interior',max_length=10,blank=True,null=True)
-	colonia					= models.CharField(verbose_name='Colonia',max_length=100)
-	municipio				= models.CharField(verbose_name='Delegación o Municipio',max_length=150)
-	ciudad					= models.CharField(verbose_name='Ciudad',max_length=100)
-	cp 						= models.IntegerField(verbose_name='CP.')
-	pais 					= models.CharField(verbose_name='País',max_length=150)
+	colonia					= models.CharField(verbose_name='Colonia',max_length=100,null=True,blank=True)
+	municipio				= models.CharField(verbose_name='Delegación o Municipio',max_length=150,null=True,blank=True)
+	ciudad					= models.CharField(verbose_name='Ciudad',max_length=100,null=True,blank=True)
+	cp 						= models.IntegerField(verbose_name='CP.',null=True,blank=True)
+	pais 					= models.CharField(verbose_name='País',max_length=150,null=True,blank=True)
 	
 	email 					= models.EmailField(verbose_name='Email principal',max_length=200)
-	re_email 		 		= models.EmailField(verbose_name='Confirma tu Mail',max_length=200,null=True,blank=True)
+	re_email 		 		= models.EmailField(verbose_name='Confirma tu Mail',max_length=200)
 	
-	area                    = models.CharField(verbose_name="Área internacinal",max_length=20)
-	lada				    = models.CharField(verbose_name='Clave Lada',max_length=20)
-	telefono				= models.CharField(verbose_name='Telefono',max_length=20)
+	area                    = models.CharField(verbose_name="Área internacinal",max_length=20,null=True,blank=True)
+	lada				    = models.CharField(verbose_name='Clave Lada',max_length=20,null=True,blank=True)
+	telefono				= models.CharField(verbose_name='Telefono',max_length=20,null=True,blank=True)
 
 	''' Enlace a Miembro y Call Center '''
 	call_center 			= models.ForeignKey(User,related_name='CallCenter',null=True,blank=True)
@@ -75,15 +75,14 @@ class membresia(models.Model):
 	def __unicode__(self):
 		return "%s"%(self.id) 
 
-class menores_edad(models.Model):
-	titular          = models.ForeignKey(User,related_name="Menores de Edad de menor")
-	mem_titular      = models.ForeignKey(membresia,related_name="Membresia Titular de menor")
+class MenoresEdad(models.Model):
+	titular          = models.ForeignKey(User,related_name="Titulares")
+	mem_titular      = models.ForeignKey(membresia,related_name="MemTitulares")
 	nombre           = models.CharField(max_length=150,verbose_name="Nombre")
 	apellido_paterno = models.CharField(max_length=150,verbose_name="Apellido Paterno")
 	apellido_materno = models.CharField(max_length=150,verbose_name="Apellido Materno")
 	fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
 	relacion 		 = models.CharField(max_length=100,verbose_name="Relación con el titular")
-
 	class Meta:
 		verbose_name = 'Menor de edad'
 		verbose_name_plural = 'Menores de edad'
@@ -91,6 +90,14 @@ class menores_edad(models.Model):
 	def __unicode__(self):
 		return ("%s %s %s")%(self.nombre, self.apellido_materno,self.apellido_paterno)
 
+class PaseMenor(models.Model):
+	titular 		= models.ForeignKey(User,related_name='PasesTitulares')
+	menor   		= models.ForeignKey(MenoresEdad,related_name='Pases',verbose_name="Seleccione el menor de edad")
+	fecha_inicio    = models.DateField(auto_now_add=True) 
+	fecha_fin   	= models.DateField() 
+	
+	def __unicode__(self):
+		return ("%s %s %s")%(self.menor.nombre, self.menor.apellido_materno,self.menor.apellido_paterno)
 
 
 class rel_mem(models.Model):

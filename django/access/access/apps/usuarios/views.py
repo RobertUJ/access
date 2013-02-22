@@ -1,6 +1,6 @@
 #encoding:utf-8
 from django.shortcuts import render_to_response,get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from django.template import RequestContext
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -41,7 +41,6 @@ def login_view(request):
 def logout_view(request):
 	logout(request)
 	return HttpResponseRedirect('/')
-
 
 
 def llenar_info_adicional(request):

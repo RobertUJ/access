@@ -19,14 +19,13 @@
                     </div>
                     <div id="menu_perfil">
                         <ul class="nav nav-tabs nav-stacked">
-<li><a href=" {% url citas_view %} " class="citas activo">Citas</a></li>
-<li><a href="#" class="calendario">Calendario de Citas</a></li>
-<li><a href=" {% url ver_referidos %} " class="membresia">Miembros Adicionales</a></li>
-<li><a href="#" class="servicio">Servicios Externos</a></li>
-<li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
-<li><a href=" {% url menores_edad_view %} " class="menores">Menores de edad</a></li>
-
-                        </ul>   
+                            <li><a href=" {% url citas_view %} " class="citas ">Citas</a></li>
+                            <li><a href=" {% url calendario_cita %} " class="calendario">Calendario de Citas</a></li>
+                            <li><a href=" {% url ver_referidos %} " class="membresia">Miembros Adicionales</a></li>
+                            <li><a href="#" class="servicio">Servicios Externos</a></li>
+                            <li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
+                            <li><a href=" {% url menores_edad_view %} " class="menores activo">Menores de edad</a></li>
+                        </ul>  
                     </div>
                 </div>
 	    	</div>
@@ -34,9 +33,10 @@
 
 <div id="navegacion">
   <a class="btn btn-danger" href=" {% url menores_edad_nuevo %} ">Agregar nuevo menor de edad</a>
+  <a class="btn btn-danger" href=" {% url compra_pase_view %} ">Comprar pase para menor de edad</a>
 </div>
 
-	               <div class="listado-logs">
+<div class="listado-logs">
 <table class="acti" width="100%" border="0">
 <thead>
 <tr>
@@ -46,6 +46,7 @@
       <th scope="col">Apellido Materno</th>
       <th scope="col">Fecha Nacimiento</th>
       <th scope="col">Relación </th>
+      <th scope="col">Pase</th>
   </tr>
 </thead>
 <tbody id="cont_actividades_tr">
@@ -57,6 +58,17 @@
       <td>{{m.apellido_materno}}</td>
       <td class="act-fecha" width="20%">{{m.fecha_nacimiento|date:"D d M Y"}} </td>
       <td>{{m.relacion}}</td>
+      <td>
+          {% for pase in m.Pases.all   %}
+              {% if pase.fecha_fin > fecha_hoy  %}
+                {{pase.fecha_fin|timeuntil}} 
+              {% elif pase.fecha_fin < fecha_hoy %}
+                Pase Vencido
+              {% endif %}
+          {% empty %}
+                No tiene Pase    
+          {% endfor %}
+      </td>
     </tr>
   {% endfor %}
 </tbody>

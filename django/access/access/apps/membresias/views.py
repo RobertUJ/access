@@ -6,10 +6,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 #Modelos 
 from django.contrib.auth.models import User
-from access.apps.membresias.models import membresia,rel_mem,menores_edad
+from access.apps.membresias.models import membresia,rel_mem,MenoresEdad,PaseMenor
 from access.apps.actividades.models import actividad
 # Formularios
-from access.apps.membresias.forms import frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm
+from access.apps.membresias.forms import frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
 # Librerias / Herramientas
 from string import digits, letters
 import random
@@ -32,8 +32,6 @@ def add_act(_miembro,texto=""):
 		return True
 	except Exception, e:
 		return False
-
-
 
 def compra_membresia_online(request):
 	if request.method == "POST":
@@ -80,6 +78,7 @@ def compra_membresia_call_center(request):
 			newMem = frm.save(commit=False)
 			newMem.password = _pw()
 			objMembresia = newMem.save()
+
 			request.session['pkMem'] = newMem.id
 			return HttpResponseRedirect('/membresia.resumen/')
 		else:
@@ -137,7 +136,6 @@ def compra_referido(request):
 
 def resumen_compra(request):
 	idMem = int(request.session.get('pkMem', 0))
-	
 	try:
 		objMembresia = membresia.objects.get(pk=idMem)
 	except:
@@ -265,8 +263,10 @@ def _envia_email_menores(objUser,menor):
 
 @login_required
 def menores_edad_all(request):
-	_objMenores = menores_edad.objects.filter(titular=request.user)
-	ctx = {'objMenores':_objMenores}
+	from datetime import date,timedelta
+	qs = MenoresEdad.objects.prefetch_related('Pases').filter(titular=request.user)
+
+	ctx = {'objMenores':qs,'fecha_hoy':date.today()}
 	return render_to_response('menores/menores.html',ctx,context_instance=RequestContext(request))
 
 @login_required
@@ -276,10 +276,14 @@ def menores_edad_nuevo(request):
 		if frm.is_valid():
 			_frm = frm.save(commit=False)
 			_frm.titular = request.user
+			
+			mem = membresia.objects.get(miembro=request.user)
 			try:
 				mem = membresia.objects.get(miembro=request.user)
 			except Exception, e:
 				mem = None
+
+			print mem
 			_frm.mem_titular = mem
 			_frm.save()
 			_envia_email_menores(request.user,_frm)
@@ -295,3 +299,61 @@ def menores_edad_nuevo(request):
 		ctx = {'form':frm}
 	return render_to_response('menores/nuevo.html',ctx,context_instance=RequestContext(request))
 
+@login_required
+def compra_pase(request):
+	import datetime
+	from django.utils import timezone
+	
+	_menores = MenoresEdad.objects.filter(titular=request.user)
+	if request.method == "POST":
+		frm = frmPaseMenor(request.POST)
+		if frm.is_valid():
+			_menor = frm.cleaned_data['menor']
+			try:
+				objPases = PaseMenor.objects.filter(titular=request.user, menor=_menor)
+				print objPases
+				if objPases:
+					for p in objPases:
+						if p.fecha_fin > datetime.datetime.now().date():
+							ctx = {'form':frm,'mensaje':"Este menor de edad tiene un pase valido",'pase':p}
+							return render_to_response('menores/pase.html',ctx,context_instance=RequestContext(request))
+			except Exception, e:
+				print "Error"
+				pass
+
+			_frm = frm.save(commit=False)
+			
+			#  Obtengo fecha actual y se le suma un año
+			_fin = timezone.now() + datetime.timedelta(days=365)
+			
+			# Asignacion de valores a las variables
+			_frm.titular = request.user
+			_frm.fecha_fin = _fin
+			_frm.save()
+			
+			_envia_email_menores_pase(request.user,_frm)
+
+			# Agrega activiadad
+			texto = "Se compro un pase de menor de edad para un año"
+			add_act(request.user,texto)
+			return HttpResponseRedirect("/membresia.menor/")
+		else:
+			ctx = {'form':frm,'menores':_menores}
+	else:
+		frm = frmPaseMenor()
+		ctx = {'form':frm,'menores':_menores}
+	return render_to_response('menores/pase.html',ctx,context_instance=RequestContext(request))
+
+
+def _envia_email_menores_pase(objUser,menor):
+	to_mem_dos = ""
+	try:
+		to_mem = objUser.email
+		subject = "24 Access Membresia"
+		html_content = "Se a comprado un pase por un año para  %s %s %s" % (menor.nombre,menor.apellido_paterno,menor.apellido_materno)
+		msg = EmailMultiAlternatives(subject,html_content,'from@server.com',[to_mem])
+		msg.attach_alternative(html_content,'text/html') #Definimos el contenido como HTML
+		msg.send() #enviamos el correo	
+		return True
+	except:
+		return False

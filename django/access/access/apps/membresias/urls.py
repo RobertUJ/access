@@ -16,5 +16,7 @@ urlpatterns = patterns('access.apps.membresias.views',
 	
 	url(r'^membresia.menor/$','menores_edad_all',name='menores_edad_view'),
 	url(r'^membresia.menor/nuevo$','menores_edad_nuevo',name='menores_edad_nuevo'),
+	
+	url(r'^membresia.menor/pase$','compra_pase',name='compra_pase_view'),
 
 )
