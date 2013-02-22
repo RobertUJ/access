@@ -53,14 +53,14 @@ class cita(models.Model):
 	info_vuelo				= models.TextField(verbose_name='Agrega la información de tu vuelo',null=True,blank=True)
 
 	socio     				= models.ForeignKey(User,related_name="Socio",null=True,blank=True)
-	miembro   				= models.ForeignKey(User,related_name="Membresía",null=True,blank=True)
+	miembro   				= models.ForeignKey(User,related_name="Membresia",null=True,blank=True)
 
 	class Meta:
 		verbose_name = 'Cita'
 		verbose_name_plural = 'Citas'
 	
 	def __unicode__(self):
-		return "%s" % self.fecha
+		return "Fecha Solicitada %s" % self.fecha_cita
 
 
 

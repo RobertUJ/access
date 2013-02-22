@@ -20,7 +20,8 @@ class frmCompraMembresiaCallCenter(forms.ModelForm):
 
 	class Meta:
 		model = membresia
-		exclude = ['call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
+		fields = ['tipo', 'nombre','apellido_paterno','apellido_materno','email','re_email',]
+		# exclude = [ 'call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
 
 
 class frmCompraAdicional(forms.ModelForm):

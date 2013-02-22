@@ -50,9 +50,6 @@ def compra_membresia_online(request):
 	ctx = {'form':objForm}
 	return render_to_response('forms/membresia/compra.html',ctx,context_instance=RequestContext(request))
 
-
-
-
 def sel_tipo_mem(request):
 	return render_to_response('forms/membresia/pre_compra.html',context_instance=RequestContext(request))
 
@@ -81,6 +78,7 @@ def compra_membresia_call_center(request):
 			newMem = frm.save(commit=False)
 			newMem.password = _pw()
 			objMembresia = newMem.save()
+
 			request.session['pkMem'] = newMem.id
 			return HttpResponseRedirect('/membresia.resumen/')
 		else:
@@ -138,7 +136,6 @@ def compra_referido(request):
 
 def resumen_compra(request):
 	idMem = int(request.session.get('pkMem', 0))
-	
 	try:
 		objMembresia = membresia.objects.get(pk=idMem)
 	except:
@@ -304,22 +301,33 @@ def menores_edad_nuevo(request):
 
 @login_required
 def compra_pase(request):
-	from datetime import date,timedelta
-
+	import datetime
+	from django.utils import timezone
+	
 	_menores = MenoresEdad.objects.filter(titular=request.user)
 	if request.method == "POST":
 		frm = frmPaseMenor(request.POST)
 		if frm.is_valid():
+			_menor = frm.cleaned_data['menor']
+			try:
+				objPases = PaseMenor.objects.filter(titular=request.user, menor=_menor)
+				print objPases
+				if objPases:
+					for p in objPases:
+						if p.fecha_fin > datetime.datetime.now().date():
+							ctx = {'form':frm,'mensaje':"Este menor de edad tiene un pase valido",'pase':p}
+							return render_to_response('menores/pase.html',ctx,context_instance=RequestContext(request))
+			except Exception, e:
+				print "Error"
+				pass
+
 			_frm = frm.save(commit=False)
 			
 			#  Obtengo fecha actual y se le suma un año
-			_hoy = date.today()
-			_anio = _hoy.year + 1
-			_fin = _hoy.replace(_anio,_hoy.month,_hoy.day)
-
+			_fin = timezone.now() + datetime.timedelta(days=365)
+			
 			# Asignacion de valores a las variables
 			_frm.titular = request.user
-			_frm.fecha_inicio = _hoy
 			_frm.fecha_fin = _fin
 			_frm.save()
 			
@@ -330,10 +338,10 @@ def compra_pase(request):
 			add_act(request.user,texto)
 			return HttpResponseRedirect("/membresia.menor/")
 		else:
-			ctx = {'menores':_menores,'form':frm}
+			ctx = {'form':frm,'menores':_menores}
 	else:
 		frm = frmPaseMenor()
-		ctx = {'menores':_menores, 'form':frm}
+		ctx = {'form':frm,'menores':_menores}
 	return render_to_response('menores/pase.html',ctx,context_instance=RequestContext(request))
 
 

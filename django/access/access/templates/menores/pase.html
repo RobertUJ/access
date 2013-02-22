@@ -15,19 +15,30 @@
 					<fieldset>
 						<h3 class="mod-head">Compra de pase para un año</h3>
 					
-					{% for f in form  %}
-						<div class="control-group  {% if f.errors %}error{% endif %}">
+					{% if mensaje %}
+						<div><h5>{{mensaje}}</h5></div>
+						Fecha Compra: <strong>{{pase.fecha_inicio}}</strong> <br> 
+						Fecha vencimiento: <strong>{{pase.fecha_fin}}</strong>
+						<br>
+					{% endif %}
+
+						<div class="control-group  {% if f.menor.errors %}error{% endif %}">
 							<label class="control-label">
-								{{f.label_tag}}
+								{{f.menor.label_tag}}
 							</label>
 							<div class="controls">
-								{{ f }}
-								{% if f.errors %}
-									<span class="help-inline">{{f.errors}}</span>
+								<select name="menor" id="id_menor">
+									<option value="" selected="selected">---------</option>
+									{% for m in menores  %}
+										<option value="{{m.id}}">{{m.name}} {{m.apellido_paterno}} {{m.apellido_materno}}</option>
+									{% endfor %}
+								</select>
+								{% if f.menor.errors %}
+									<span class="help-inline">{{f.menor.errors}}</span>
 								{% endif %}
 							</div>
 						</div>
-					{% endfor %}
+				
 				
 					</fieldset>
 					</div>
@@ -36,9 +47,8 @@
 						<input id="btnEnviar" class="submit activa" type="submit" value="Comprar pase">						
 					</div>
 						<!--{{ form.as_p }}-->
-
-					
 				</form>
+
 			</div>
 		</div>
 	</div>

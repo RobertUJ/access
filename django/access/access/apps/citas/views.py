@@ -328,3 +328,38 @@ def _envia_email_solicitud(request,objCita):
 		return True
 	except:
 		return False
+
+@login_required(login_url='/usuarios/login/')
+def  calendario_citas(request):
+	import json
+	import datetime
+	import time
+
+	try:
+		objCitas = cita.objects.filter(miembro=request.user)
+	except Exception, e:
+		objCitas = None
+
+	if not objCitas:
+		ctx = {'mensaje':"No hay citas en el calendario"}
+		return render_to_response('citas/calendario.html',ctx,context_instance=RequestContext(request))
+	else:
+		toJson = '['
+		for c in objCitas:
+			if c.fecha_confirmada:
+				ff = c.fecha_confirmada.replace(tzinfo=None)
+				fs = datetime.datetime(year=1970,month=1,day=1).replace(tzinfo=None)
+				f = ff - fs
+				# total_seconds()
+				toJson += '{"date":"%s000","type":"confirmada","title":"Cita Confirmada","description":"%s","url":"/citas.ver/%s"},' % (int(round(f.total_seconds())),c.motivos_cita,c.id)
+			else:
+				ff = datetime.datetime(*(c.fecha_cita.timetuple()[:6])) 
+				fs = datetime.datetime(year=1970,month=1,day=1).replace(tzinfo=None)
+				f = ff - fs
+
+				# total_seconds()
+				toJson += '{"date":"%s000","type":"SinConfirmar","title":"Cita No Confirmada","description":"%s","url":"/citas.ver/%s"},' % (int(round(f.total_seconds())),c.motivos_cita,c.id)
+		toJson += ']'
+
+	ctx = {'mijson':toJson}
+	return render_to_response('citas/calendario.html',ctx, context_instance=RequestContext(request))

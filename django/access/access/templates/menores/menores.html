@@ -19,14 +19,13 @@
                     </div>
                     <div id="menu_perfil">
                         <ul class="nav nav-tabs nav-stacked">
-<li><a href=" {% url citas_view %} " class="citas activo">Citas</a></li>
-<li><a href="#" class="calendario">Calendario de Citas</a></li>
-<li><a href=" {% url ver_referidos %} " class="membresia">Miembros Adicionales</a></li>
-<li><a href="#" class="servicio">Servicios Externos</a></li>
-<li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
-<li><a href=" {% url menores_edad_view %} " class="menores">Menores de edad</a></li>
-
-                        </ul>   
+                            <li><a href=" {% url citas_view %} " class="citas ">Citas</a></li>
+                            <li><a href=" {% url calendario_cita %} " class="calendario">Calendario de Citas</a></li>
+                            <li><a href=" {% url ver_referidos %} " class="membresia">Miembros Adicionales</a></li>
+                            <li><a href="#" class="servicio">Servicios Externos</a></li>
+                            <li><a href=" {% url actividades_view %} " class="actividad">Actividades</a></li>
+                            <li><a href=" {% url menores_edad_view %} " class="menores activo">Menores de edad</a></li>
+                        </ul>  
                     </div>
                 </div>
 	    	</div>
@@ -62,7 +61,7 @@
       <td>
           {% for pase in m.Pases.all   %}
               {% if pase.fecha_fin > fecha_hoy  %}
-                {{pase.fecha_fin}} 
+                {{pase.fecha_fin|timeuntil}} 
               {% elif pase.fecha_fin < fecha_hoy %}
                 Pase Vencido
               {% endif %}

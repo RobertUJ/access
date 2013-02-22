@@ -4,14 +4,14 @@
 
 {% block contenido %}
 	<div class="separador-slider visible-desktop"></div>
-	<div class="container-fluid">
-	    <div class="row-fluid">
+	<div class="container">
+	    <div class="row">
 	        
 	        	<h1 class="mod-head"><span id="msg">Compra de membresia Call Center</span></h1>
 	        	<div class="form-full">
 				<form action="" method="POST">
 					{% csrf_token %}
-				<div class="span6">
+				<div class="span4">
 				<fieldset>
 					
 				
@@ -67,7 +67,109 @@
 				</div>
 			</div>
 			
-<div class="span6">
+			<div class="span4">
+				<h3 class="mod-head">Domicilio para envio de documentos</h3>
+				<div class="control-group {% if form.calle.errors %}error{% endif %}">
+					<label class="control-label {% if form.calle.errors %}error{% endif %}">
+						{{form.calle.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.calle }}
+						{% if form.calle.errors %}
+							<span class="help-inline">{{form.calle.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="position-two">
+				<div class="control-group {% if form.no_exterior.errors %}error{% endif %}">
+					<label class="control-label {% if form.no_exterior.errors %}error{% endif %}">
+						{{form.no_exterior.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.no_exterior }}
+						{% if form.no_exterior.errors %}
+							<span class="help-inline">{{form.no_exterior.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group nopad {% if form.no_interior.errors %}error{% endif %}">
+					<label class="control-label {% if form.no_interior.errors %}error{% endif %}">
+						{{form.no_interior.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.no_interior }}
+						{% if form.no_interior.errors %}
+							<span class="help-inline">{{form.no_interior.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+				<div class="control-group {% if form.colonia.errors %}error{% endif %}">
+					<label class="control-label {% if form.colonia.errors %}error{% endif %}">
+						{{form.colonia.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.colonia }}
+						{% if form.colonia.errors %}
+							<span class="help-inline">{{form.colonia.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.municipio.errors %}error{% endif %}">
+					<label class="control-label {% if form.municipio.errors %}error{% endif %}">
+						{{form.municipio.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.municipio }}
+						{% if form.municipio.errors %}
+							<span class="help-inline">{{form.municipio.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group {% if form.ciudad.errors %}error{% endif %}">
+					<label class="control-label {% if form.ciudad.errors %}error{% endif %}">
+						{{form.ciudad.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.ciudad }}
+						{% if form.ciudad.errors %}
+							<span class="help-inline">{{form.ciudad.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+				<div class="position-two">
+				<div class="control-group {% if form.cp.errors %}error{% endif %}">
+					<label class="control-label {% if form.cp.errors %}error{% endif %}">
+						{{form.cp.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.cp }}
+						{% if form.cp.errors %}
+							<span class="help-inline">{{form.cp.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+
+				<div class="control-group nopad {% if form.pais.errors %}error{% endif %}">
+					<label class="control-label {% if form.pais.errors %}error{% endif %}">
+						{{form.pais.label_tag}}
+					</label>
+					<div class="controls">
+						{{ form.pais }}
+						{% if form.pais.errors %}
+							<span class="help-inline">{{form.pais.errors}}</span>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+				<!-- *********************************  -->
+
+				</fieldset>
+			</div>
+<div class="span4">
 	<h3 class="mod-head">Datos de contacto</h3>
 				<fieldset>
 
