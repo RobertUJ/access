@@ -275,7 +275,7 @@
 <script>
 	$(document).on("ready",inicio);
 	function inicio(){
-		$("#id_fecha_vencimiento").datepicker();
+		$("#id_fecha_vencimiento").datepicker({ dateFormat: "dd/mm/yy" });
 	}
 </script>
 {% endblock extra_js %}
