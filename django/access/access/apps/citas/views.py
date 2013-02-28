@@ -4,14 +4,14 @@ from django.template import RequestContext
 from django.http import HttpResponse , HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-#Modelos 
+ 
 from django.contrib.auth.models import User
 from access.apps.citas.models import cita
 from access.apps.membresias.models import membresia
 from access.apps.actividades.models import actividad
-# Formularios
+
 from access.apps.citas.forms import frmCita,frmCitaAvion
-# Librerias / Herramientas
+
 from django.core.mail import EmailMultiAlternatives 
 import json
 from django.template import loader, Context
@@ -50,13 +50,13 @@ def citas(request):
 	user_type = int(request.user.profile.tipo_usuario)
 	if user_type == 4:
 		if request.method == "POST":
-			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada','-info_vuelo')
+			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada')
 		else:
-			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada','-info_vuelo')
+			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada')
 		ctx = {'citas':objCita}
 		return render_to_response('citas/citas_admin.html',ctx,context_instance=RequestContext(request))
 	else:
-		objCita = cita.objects.filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada','-info_vuelo')
+		objCita = cita.objects.filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
 		ctx = {'citas':objCita}
 		return render_to_response('citas/citas.html',ctx,context_instance=RequestContext(request))
 
@@ -73,7 +73,7 @@ def citas_filtros(request):
 	if request.method == "POST":
 		_confirmadas =  request.POST.get('confirmadas','_none')
 		_canceladas  =  request.POST.get('activas','_none')
-		_info_vuelo  =  request.POST.get('info_vuelo','_none')
+		# _info_vuelo  =  request.POST.get('info_vuelo','_none')
 
 		filtros = "{"
 		if _confirmadas != '_none':
@@ -88,18 +88,19 @@ def citas_filtros(request):
 			else:
 				filtros +=  "'estado':False,"
 		
-		if _info_vuelo != '_none':
-			if _info_vuelo == "NO":
-				filtros +=  "'info_vuelo':''"
+		# if _info_vuelo != '_none':
+		# 	if _info_vuelo == "NO":
+		# 		filtros +=  "'info_vuelo':''"
 		filtros += "}"		
 
 		filtros_ = ast.literal_eval(filtros)
 
+		_info_vuelo = "NO"
 		if filtros == "":
 			objCitas = cita.objects.all()
 		else:
 			if _info_vuelo == "SI":
-				objCitas = cita.objects.filter(**filtros_).exclude(info_vuelo = '')
+				objCitas = cita.objects.filter(**filtros_)
 			else:
 				objCitas = cita.objects.filter(**filtros_)
 
@@ -347,16 +348,17 @@ def  calendario_citas(request):
 		toJson = '['
 		for c in objCitas:
 			if c.fecha_confirmada:
+				c.fecha_confirmada += datetime.timedelta(days=1)
 				ff = c.fecha_confirmada.replace(tzinfo=None)
 				fs = datetime.datetime(year=1970,month=1,day=1).replace(tzinfo=None)
 				f = ff - fs
 				# total_seconds()
 				toJson += '{"date":"%s000","type":"confirmada","title":"Cita Confirmada","description":"%s","url":"/citas.ver/%s"},' % (int(round(f.total_seconds())),c.motivos_cita,c.id)
 			else:
+				c.fecha_cita += datetime.timedelta(days=1)
 				ff = datetime.datetime(*(c.fecha_cita.timetuple()[:6])) 
 				fs = datetime.datetime(year=1970,month=1,day=1).replace(tzinfo=None)
 				f = ff - fs
-
 				# total_seconds()
 				toJson += '{"date":"%s000","type":"SinConfirmar","title":"Cita No Confirmada","description":"%s","url":"/citas.ver/%s"},' % (int(round(f.total_seconds())),c.motivos_cita,c.id)
 		toJson += ']'

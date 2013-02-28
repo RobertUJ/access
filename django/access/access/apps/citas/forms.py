@@ -17,4 +17,4 @@ class frmCita(forms.ModelForm):
 class frmCitaAvion(forms.ModelForm):
 	class Meta:
 		model = cita
-		fields = ['info_vuelo',]
+		fields = ['recomendaciones',]

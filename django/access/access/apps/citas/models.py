@@ -14,8 +14,9 @@ class especialidad(models.Model):
 		verbose_name = "Especialidad para citas"
 		verbose_name_plural = "Especialidades para las citas"
 
+
 class cita(models.Model):
-	''' Modelo para la creación de citas  '''
+	''' Modelo para la creación de citas '''
 	# Relacionarla con datos de contacto y  problemas
 	no_membresia			= models.ForeignKey(membresia)
 
@@ -26,7 +27,7 @@ class cita(models.Model):
 	datos_contacto			= models.TextField(null=True,blank=True,verbose_name='Datos de contacto, de quién solicita la cita')
 		
 	fecha_cita				= models.DateField(null=False,blank=False,verbose_name='Fecha aproximada de la cita')
-	preferencia_horario 	= (("Mañana","Mañana"),("Tarde","Tarde"),)
+	preferencia_horario 	= (("Manana","Mañana"),("Tarde","Tarde"),)
 	preferencia				= models.CharField(max_length=50,choices=preferencia_horario,verbose_name="Preferencia de horario")
 
 	especialidad_cita		= models.ForeignKey(especialidad,verbose_name='Especialidad para la cita',help_text="Si no conoces tu especialidad selecciona medicina interna.")
@@ -46,11 +47,11 @@ class cita(models.Model):
 	
 	confirmada				= models.BooleanField(default=False)
 	fecha_confirmada 		= models.DateTimeField(null=False,blank=False,verbose_name='Fecha y Hora confirmada para la cita en Houston')
+	conf_miembro 			= models.BooleanField(default=False)
+
 
 	fecha_hora 				= models.DateTimeField(auto_now_add=True)
 	estado					= models.BooleanField(default=False)
-
-	info_vuelo				= models.TextField(verbose_name='Agrega la información de tu vuelo',null=True,blank=True)
 
 	socio     				= models.ForeignKey(User,related_name="Socio",null=True,blank=True)
 	miembro   				= models.ForeignKey(User,related_name="Membresia",null=True,blank=True)
@@ -64,8 +65,25 @@ class cita(models.Model):
 
 
 
+class Vuelo(models.Model):
+	Cita = models.ForeignKey(cita,related_name="citas")
+	HoraFecha = models.DateTimeField()
+	Aerolinea = models.CharField(max_length=100)
+	Vuelo = models.CharField(max_length=100)
+	Comentarios = models.TextField()
+	Estado 	= models.BooleanField(default=False)
+    
+	class Meta:
+	    verbose_name = 'vuelo'
+	    verbose_name_plural = 'vuelos'
+
+	def __unicode__(self):
+	    return "%s" % self.Cita 
+    
 
 
+
+		
 
 	
 

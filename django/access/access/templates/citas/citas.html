@@ -98,15 +98,9 @@
                 		
                 	</td>
                 	<td>
-                		{% if c.info_vuelo %}
-                			<span class='msg_'  title="{{ c.info_vuelo }} " >
-                				<a class='vuelo_info'  href="{% url edita_vuelo c.id %}" >Confirmada</a>
-                			</span>
-                		{% else %}
-                			<span class="msg_" title="Por favor ingrese la información del vuelo.">
-                				<a   class="info_avion_add vuelo_info" href="{% url edita_vuelo c.id %}">Sin ingresar</a>
-                			</span>
-                		{% endif %}
+                		
+                        info vuelo
+
                 	</td>
                 	<td>
                 		{% if c.estado %}
