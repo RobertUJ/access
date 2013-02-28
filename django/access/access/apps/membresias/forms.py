@@ -38,22 +38,16 @@ class frmCompraAdicional(forms.ModelForm):
 		model = membresia
 		exclude = ['call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
 
-
-
-
 		
 class frmMenoresEdad(forms.ModelForm):
 	class Meta:
 		model = MenoresEdad
-		exclude =['titular','mem_titular',]
+		exclude =['titular','mem_titular','relacion']
 
 class frmPaseMenor(forms.ModelForm):
 	class Meta:
 		model = PaseMenor
 		exclude = ['titular','fecha_inicio','fecha_fin']
-
-
-
 
 class frmCompraMembresiaOnline(forms.ModelForm):
 	class Meta:
@@ -63,6 +57,12 @@ class frmCompraMembresiaOnline(forms.ModelForm):
 class frmActivaMembresia(forms.Form):
 	membresia 	= forms.CharField(widget=forms.TextInput())
 	password 	= forms.CharField(widget=forms.PasswordInput())
+
+
+class frmActualizaMembresia(forms.ModelForm):
+	class Meta:
+		model = membresia
+		exclude = ['tipo','call_center','miembro','password','renovo_pass','online','fecha_registro','fecha_envio','fecha_recibo','activa','pagada','activa_paquete']
 
 
 class frmInfoActivacion(forms.ModelForm):
@@ -75,7 +75,6 @@ def validate_username_unique(value):
 	''' Custom validator for user uniqueness. '''
 	if User.objects.filter(username=value).exists():
 		raise ValidationError(u'El nombre de usuario "%s" ya existe. ' % value)
-
 
 
 class registerUserFrm(forms.Form):

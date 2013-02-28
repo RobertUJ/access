@@ -45,7 +45,6 @@
       <th scope="col">Apellido Paterno</th>
       <th scope="col">Apellido Materno</th>
       <th scope="col">Fecha Nacimiento</th>
-      <th scope="col">Relación </th>
       <th scope="col">Pase</th>
   </tr>
 </thead>
@@ -57,7 +56,6 @@
       <td>{{m.apellido_paterno}}</td>
       <td>{{m.apellido_materno}}</td>
       <td class="act-fecha" width="20%">{{m.fecha_nacimiento|date:"D d M Y"}} </td>
-      <td>{{m.relacion}}</td>
       <td>
           {% for pase in m.Pases.all   %}
               {% if pase.fecha_fin > fecha_hoy  %}

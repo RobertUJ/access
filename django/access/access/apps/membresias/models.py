@@ -82,7 +82,7 @@ class MenoresEdad(models.Model):
 	apellido_paterno = models.CharField(max_length=150,verbose_name="Apellido Paterno")
 	apellido_materno = models.CharField(max_length=150,verbose_name="Apellido Materno")
 	fecha_nacimiento = models.DateField(verbose_name="Fecha de nacimiento")
-	relacion 		 = models.CharField(max_length=100,verbose_name="Relación con el titular")
+	relacion 		 = models.CharField(null=True,blank=True,max_length=100,verbose_name="Relación con el titular")
 	class Meta:
 		verbose_name = 'Menor de edad'
 		verbose_name_plural = 'Menores de edad'

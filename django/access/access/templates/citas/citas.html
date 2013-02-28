@@ -14,7 +14,7 @@
                         </div>
                         <div id="nombre_perfil">
                            {{user.get_full_name}} 
-                            <a href="" title="">Editar</a> 
+                            <a href=" {% url edicion_membresia %} " title="Editar membresia">Editar</a> 
                         </div>
                     </div>
                     <div id="menu_perfil">
@@ -40,6 +40,8 @@
                                 <option value="--">Selecciona una acción</option>
                                 <option value="edit">Reagendar cita</option>
                                 <option value="del">Cancelar Cita</option>
+                                <option value="conf_miembro">Confirmar Cita</option>
+                                <option value="edit_vuelo">Agregar|Editar la información de vuelo</option>
                                 <option value="look">Ver información completa</option>
                             </select> 
                             <input type="submit" name="enviar" value="Aceptar" class="btn" id="btnAccion">
@@ -47,10 +49,14 @@
                   </div>
 	        	  
 
-                  <a class="btn btn-danger pull-right" href=" {% url solicita_citas_view %} ">Pide una cita</a>
+                  <a class="btn btn-danger pull-right" href=" {% url solicita_citas_view %} ">Pide una cita</a> 
                     
                 </div>
             	<hr>
+
+                {% if msg %}
+                    <h3 class="msg">{{msg}}</h3>
+                {% endif %}
 
 			<table class="table table-hover">
 	            <thead>
@@ -61,7 +67,8 @@
                       <th>Membresía</th>
                       <th>Fecha Solicitud</th>
 	                  <th>Fecha Cita</th>
-	                  <th>Confirmada</th>
+                      <th>Conf 24Access</th>
+	                  <th>Conf Miembro</th>
 	                  <th>Info Avión</th>
 	                  <th>Estado</th>
 	                  <th>Ver Info</th>
@@ -97,9 +104,28 @@
                 		{% endif %}
                 		
                 	</td>
+                    <td>
+                        {% if c.conf_miembro %}
+                            <span class="confirmada msg_" title="Ya has confirmado tu cita.">
+                                <img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+                            </span>
+                        {% else %}
+                            <span class="no_confirmada msg_" title="No has confirmado tu cita">
+                                <img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+                            </span>
+                        {% endif %}
+                        
+                    </td>
                 	<td>
-                		
-                        info vuelo
+                	    {% if c.vuelos %}
+                            <span class='msg_'  title="Información  de vuelo Confirmada" >
+                                <a class='vuelo_info'  href="{% url add_vuelo c.id %}" >.</a>
+                            </span>
+                        {% else %}
+                            <span class="msg_" title="Por favor ingrese la información del vuelo.">
+                                <a class="info_avion_add vuelo_info" href="{% url add_vuelo c.id %}">.</a>
+                            </span>
+                        {% endif %} 
 
                 	</td>
                 	<td>
@@ -156,6 +182,22 @@ function accion_btn(e)
         case 'edit':
             if (numSel > 1){
                 alert("No puedes editar mas de una cita a la vez. Seleeciona solo una.");
+                return false;
+            }else{
+               frmEnvio.submit(); 
+            }
+            break;
+        case 'edit_vuelo':
+            if (numSel > 1){
+                alert("No puedes agregar/editar la información de vuelo a mas de una cita a la vez. Seleeciona solo una.");
+                return false;
+            }else{
+               frmEnvio.submit(); 
+            }
+            break;
+        case 'conf_miembro':
+            if (numSel > 1){
+                alert("No puedes confirmar más de una cita a la vez. Seleeciona solo una.");
                 return false;
             }else{
                frmEnvio.submit(); 

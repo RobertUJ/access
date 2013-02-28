@@ -6,11 +6,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
  
 from django.contrib.auth.models import User
-from access.apps.citas.models import cita
+from access.apps.citas.models import cita,Vuelo
 from access.apps.membresias.models import membresia
 from access.apps.actividades.models import actividad
+from django.db.models import Count
 
-from access.apps.citas.forms import frmCita,frmCitaAvion
+from access.apps.citas.forms import frmCita,frmCitaAvion,frmAddInfoVuelo
 
 from django.core.mail import EmailMultiAlternatives 
 import json
@@ -50,14 +51,60 @@ def citas(request):
 	user_type = int(request.user.profile.tipo_usuario)
 	if user_type == 4:
 		if request.method == "POST":
-			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada')
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
 		else:
-			objCita = cita.objects.all().order_by('-estado','fecha_cita','-confirmada')
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
 		ctx = {'citas':objCita}
 		return render_to_response('citas/citas_admin.html',ctx,context_instance=RequestContext(request))
 	else:
-		objCita = cita.objects.filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
+		objCita = cita.objects.annotate(vuelos=Count('citas')).filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
 		ctx = {'citas':objCita}
+		return render_to_response('citas/citas.html',ctx,context_instance=RequestContext(request))
+
+@login_required(login_url='/usuarios/login/')
+def citas_vuelo(request):
+	user_type = int(request.user.profile.tipo_usuario)
+	if user_type == 4:
+		if request.method == "POST":
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		else:
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"Es obligatorio agregar la información de vuelo"}
+		return render_to_response('citas/citas_admin.html',ctx,context_instance=RequestContext(request))
+	else:
+		objCita = cita.objects.annotate(vuelos=Count('citas')).filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"Es obligatorio agregar la información de vuelo"}
+		return render_to_response('citas/citas.html',ctx,context_instance=RequestContext(request))
+
+
+@login_required(login_url='/usuarios/login/')
+def citas_confirmada(request):
+	user_type = int(request.user.profile.tipo_usuario)
+	if user_type == 4:
+		if request.method == "POST":
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		else:
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"Es obligatorio que el CallCenter confirme antes la cita"}
+		return render_to_response('citas/citas_admin.html',ctx,context_instance=RequestContext(request))
+	else:
+		objCita = cita.objects.annotate(vuelos=Count('citas')).filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"Es obligatorio que el CallCenter confirme antes la cita"}
+		return render_to_response('citas/citas.html',ctx,context_instance=RequestContext(request))
+
+@login_required(login_url='/usuarios/login/')
+def citas_usuario(request):
+	user_type = int(request.user.profile.tipo_usuario)
+	if user_type == 4:
+		if request.method == "POST":
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		else:
+			objCita = cita.objects.all().annotate(vuelos=Count('citas')).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"La cita que quiere editar, no le pertenece"}
+		return render_to_response('citas/citas_admin.html',ctx,context_instance=RequestContext(request))
+	else:
+		objCita = cita.objects.annotate(vuelos=Count('citas')).filter(miembro=request.user).order_by('-estado','fecha_cita','-confirmada')
+		ctx = {'citas':objCita,'msg':"La cita que quiere editar, no le pertenece"}
 		return render_to_response('citas/citas.html',ctx,context_instance=RequestContext(request))
 
 @login_required
@@ -136,20 +183,39 @@ def edita_citas(request,id_cita):
 
 
 @login_required(login_url='/usuarios/login/')
-def edita_vuelo(request,id_cita):
-	idCita = int(id_cita)
-	objCita = get_object_or_404(cita,pk=idCita)
+def add_vuelo(request,id_cita):
+	objCita = get_object_or_404(cita,pk= int(id_cita))
+
+	try:
+		infoVuelo = Vuelo.objects.get(Cita=objCita)
+	except Exception:
+		infoVuelo = None
+
 	if request.method == 'POST':
-		frm = frmCitaAvion(request.POST,instance=objCita)
+		if infoVuelo:
+			frm = frmAddInfoVuelo(request.POST,instance=infoVuelo)
+		else:
+			frm = frmAddInfoVuelo(request.POST)
+		
 		if frm.is_valid():
-			frm.save()
+			_frm = frm.save(commit=False)
+			_frm.Cita = objCita
+			_frm.save()
 			# Registra actividad 
-			texto = "Se ha editado la información de vuelo para la cita solicidata para la fecha %s" % objCita.fecha_cita	
+			if infoVuelo:
+				texto = "Se ha editado correctamente la información de vuelo para la cita solicidata para la fecha %s" % objCita.fecha_cita	
+			else:
+				texto = "Se ha agregado la información de vuelo para la cita solicidata para la fecha %s" % objCita.fecha_cita	
 			add_act(request.user,texto)
 			return HttpResponseRedirect('/citas/')
+
 		ctx ={'form':frm}
 	else:
-		ctx ={'form':frmCitaAvion(instance=objCita)}
+		if infoVuelo:
+			ctx ={'form':frmAddInfoVuelo(instance=infoVuelo)}
+		else:
+			ctx ={'form':frmAddInfoVuelo()}
+			
 	return render_to_response('citas/edita_vuelo.html',ctx,context_instance=RequestContext(request))
 
 
@@ -196,6 +262,8 @@ def confirma_cita(request,id_cita):
 def accion_citas(request):
 	if request.method == "POST":
 		accion = request.POST.get('accion')
+		
+		# """ Borar Citas """
 		if accion == 'del':
 			ids = request.POST.getlist('id_cita')
 			user_type = int(request.user.profile.tipo_usuario)
@@ -210,16 +278,54 @@ def accion_citas(request):
 				cita.objects.filter(miembro=request.user,pk__in=ids).delete()
 			return HttpResponseRedirect("/citas/")
 
+		# """ Editar Citas """
 		elif accion == 'edit':
 			ids_citas = request.POST.getlist('id_cita')
 			if len(ids_citas) > 1:
 				return HttpResponseRedirect('/citas/')
 			else:
 				return HttpResponseRedirect("/citas.editar/%s" % int(ids_citas[0]))
+
+		elif accion == 'edit_vuelo':
+			ids_citas = request.POST.getlist('id_cita')
+			if len(ids_citas) > 1:
+				return HttpResponseRedirect('/citas/')
+			else:
+				_objCita = get_object_or_404(cita,pk=int(ids_citas[0]))
+				return HttpResponseRedirect("/citas.vuelo/%s" % int(ids_citas[0]))
+
+		# """ Confirmar Citas """  
+		elif accion == 'conf_miembro':
+
+			ids_citas = request.POST.getlist('id_cita')
+
+			if len(ids_citas) > 1:
+				return HttpResponseRedirect('/citas/')
+			else:
+				
+				_objCita = get_object_or_404(cita,pk=int(ids_citas[0]))
+
+				if not _objCita.confirmada:
+					return HttpResponseRedirect('/citas/confirmada/')
+				
+				try:
+					infoVuelo = Vuelo.objects.get(Cita=_objCita)	
+				except Exception:
+					return HttpResponseRedirect('/citas/vuelo/')
+			
+				if not _objCita.miembro == request.user:
+					return HttpResponseRedirect('/citas/usuario/')
+				else:
+					_objCita.conf_miembro = True
+					_objCita.save()
+					return HttpResponseRedirect('/citas/')
+
+		# """ Ver citas """   
 		elif accion == 'look':
 			ids_citas = request.POST.getlist('id_cita')
 			request.session['ids_citas'] = ids_citas
 			return HttpResponseRedirect("/citas.ver/")
+		# """ Confirmar Citas """
 		elif accion == 'conf':
 			user_type = int(request.user.profile.tipo_usuario)
 			if user_type == 4:
@@ -348,7 +454,7 @@ def  calendario_citas(request):
 		toJson = '['
 		for c in objCitas:
 			if c.fecha_confirmada:
-				c.fecha_confirmada += datetime.timedelta(days=1)
+				# c.fecha_confirmada += datetime.timedelta(days=1)
 				ff = c.fecha_confirmada.replace(tzinfo=None)
 				fs = datetime.datetime(year=1970,month=1,day=1).replace(tzinfo=None)
 				f = ff - fs

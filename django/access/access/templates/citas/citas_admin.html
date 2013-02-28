@@ -106,7 +106,8 @@
                        <th>Membresía</th>
                       <th>Usuario</th>
 	                  <th>Fecha Cita</th>
-	                  <th>Confirmada</th>
+	                  <th>Conf 24Access</th>
+                      <th>Conf Miembro</th>
 	                  <th>Info Avión</th>
 	                  <th>Estado</th>
 	                  <th>Ver Info</th>
@@ -132,25 +133,37 @@
                         <span>{{c.fecha_cita|date}}</span>
                     </td>
                 	<td>
-                		{% if c.confirmada %}
-            				<span class="confirmada msg_" title="Cita Confirmada">
-            					<img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
-            				</span>
-            			{% else %}
-							<span class="no_confirmada msg_" title="Cita no confirmada">
-            					<img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
-            				</span>
-                		{% endif %}
-                		
-                	</td>
+                        {% if c.confirmada %}
+                            <span class="confirmada msg_" title="Cita Confirmada">
+                                <img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+                            </span>
+                        {% else %}
+                            <span class="no_confirmada msg_" title="Cita no confirmada">
+                                <img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+                            </span>
+                        {% endif %}
+                        
+                    </td>
+                    <td>
+                        {% if c.conf_miembro %}
+                            <span class="confirmada msg_" title="Ya has confirmado tu cita.">
+                                <img src="{{ STATIC_URL }}images/check.png" width="" heigth="" alt="">
+                            </span>
+                        {% else %}
+                            <span class="no_confirmada msg_" title="No has confirmado tu cita">
+                                <img src="{{ STATIC_URL }}images/no_check.png" width="" heigth="" alt="">
+                            </span>
+                        {% endif %}
+                        
+                    </td>
                 	<td>
-                		{% if c.info_vuelo %}
-                			<span class='msg_'  title="{{ c.info_vuelo }} " >
-                				<a class='vuelo_info'  href="{% url edita_vuelo c.id %}" >Confirmada</a>
+                		{% if c.vuelos %}
+                			<span class='msg_'  title="Informacion de vuelo Confirmada" >
+                				<a class='vuelo_info'  href="{% url add_vuelo c.id %}" >Confirmada</a>
                 			</span>
                 		{% else %}
                 			<span class="msg_" title="Por favor ingrese la información del vuelo.">
-                				<a   class="info_avion_add vuelo_info" href="{% url edita_vuelo c.id %}">Sin ingresar</a>
+                				<a   class="info_avion_add vuelo_info" href="{% url add_vuelo c.id %}">Sin ingresar</a>
                 			</span>
                 		{% endif %}
                 	</td>

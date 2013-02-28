@@ -36,9 +36,20 @@
                     <span>Membresias:  {{objRel|length}} de 9</span>
                   </div>
 	        	  
+                  
+                    <a id="btnCompra" class="btn btn-danger pull-right" href=" {% url compra_referido_view %} ">Comprar membresias adicionales</a>
+                    <select style="margin-right:10px;" class="pull-right" name="num_mem" id="id_num_mem">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
 
-                  <a class="btn btn-danger pull-right" href=" {% url compra_referido_view %} ">Comprar membresias adicionales</a>
-                    
                 </div>
             	<hr>
 
@@ -109,61 +120,18 @@
 
 {% block extra_js %}
 <script>
-function accion_btn(e)
-{
+function enviaCompra(e){
     e.preventDefault();
-    var frmEnvio = $("#frmAccion");
-    var numSel = $(".sel_check:checked").length;
-    if(numSel < 1 )
-    {
-        alert("Selecciona una cita por favor.");
-        return false;
-    }
-    var valor = $("#id_accion").val();
-    switch(valor){
-        case 'del':
-            var flag = confirm("¿Seguro que quiere elminiar estas solicitudes de citas?");
-            if( flag  ){
-                frmEnvio.submit(); 
-            }else{
-                return false;
-            }            
-            break;
-        case 'edit':
-            if (numSel > 1){
-                alert("No puedes editar mas de una cita a la vez. Seleeciona solo una.");
-                return false;
-            }else{
-               frmEnvio.submit(); 
-            }
-            break;
-        case 'look':
-                frmEnvio.submit(); 
-            break;
-        case '--':
-                alert('Seleccione una acción por favor.');
-            break;
-        default:
-            break; 
-    }
+    var num = $("#id_num_mem").val();
+    
+
+
+
 }
-function selectAll()
-{
-    $(".sel_check").attr("checked",this.checked);
-}
+
 function inicio()
 {
-    var texto = "";
-    $('.msg_').tooltip();
-    $("#btnAccion").on("click", accion_btn);
-    $("#sel_all").on("click",selectAll);
-    
-    $('.vuelo_info').on("mouseenter",function(){
-        texto = $(this).text();
-        $(this).text("Editar");
-    }).on("mouseleave",function(){
-        $(this).text(texto);
-    });
+    $("#btnCompra").on("click",enviaCompra);
 }
 
 $(document).on("ready",inicio);

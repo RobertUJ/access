@@ -4,7 +4,7 @@ from django import forms
 from django.forms import ModelForm
 from django.db import models
 from django.forms import ModelChoiceField
-from access.apps.citas.models import cita
+from access.apps.citas.models import cita,Vuelo
 
 
 
@@ -18,3 +18,9 @@ class frmCitaAvion(forms.ModelForm):
 	class Meta:
 		model = cita
 		fields = ['recomendaciones',]
+
+
+class frmAddInfoVuelo(forms.ModelForm):
+	class Meta:
+		model = Vuelo
+		exclude = ['Cita','Estado']

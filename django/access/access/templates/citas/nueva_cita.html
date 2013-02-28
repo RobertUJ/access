@@ -237,6 +237,7 @@ function oculta_muestra(){
 		$(".rel_titular").fadeIn();
 	}
 }
+
 function muestra_otro(){
 	var valor = $(this).find("option:selected").text();
 	if (valor == "otros" || valor == "otro" || valor == "otra" || valor == "otras"){
@@ -283,10 +284,14 @@ function inicio(){
 	$("#id_es_titular").on("click",oculta_muestra);
 	$("#id_especialidad_cita_otra").hide().prev("label").hide();
 	$("#id_especialidad_cita").on("change",muestra_otro);
+	
 	ocultaInfo();
+	
 	$("#id_atendido_huston").on("click",muestra_oculta);
 	check_edit()
+	
 	$.datepicker.setDefaults( $.datepicker.regional[ "es" ] );
+	
 	$("#id_fecha_cita").datepicker({ dateFormat: "dd/mm/yy" });
 }
 

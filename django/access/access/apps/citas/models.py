@@ -46,9 +46,8 @@ class cita(models.Model):
 	comentarios 			= models.TextField(verbose_name='Comentarios adicionales',null=True,blank=True)
 	
 	confirmada				= models.BooleanField(default=False)
-	fecha_confirmada 		= models.DateTimeField(null=False,blank=False,verbose_name='Fecha y Hora confirmada para la cita en Houston')
+	fecha_confirmada 		= models.DateTimeField(null=True,blank=True,verbose_name='Fecha y Hora confirmada para la cita en Houston')
 	conf_miembro 			= models.BooleanField(default=False)
-
 
 	fecha_hora 				= models.DateTimeField(auto_now_add=True)
 	estado					= models.BooleanField(default=False)
@@ -66,11 +65,11 @@ class cita(models.Model):
 
 
 class Vuelo(models.Model):
-	Cita = models.ForeignKey(cita,related_name="citas")
-	HoraFecha = models.DateTimeField()
+	Cita = models.ForeignKey(cita,related_name="citas",unique=True)
+	HoraFecha = models.DateTimeField(verbose_name="Fecha y Hora")
 	Aerolinea = models.CharField(max_length=100)
-	Vuelo = models.CharField(max_length=100)
-	Comentarios = models.TextField()
+	Vuelo = models.CharField(max_length=100,verbose_name="Numero de Vuelo")
+	Comentarios = models.TextField(verbose_name="Comentarios adicionales")
 	Estado 	= models.BooleanField(default=False)
     
 	class Meta:

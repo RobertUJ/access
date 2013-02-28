@@ -15,8 +15,12 @@ urlpatterns = patterns('access.apps.membresias.views',
 	url(r'^membresia.activa/$','activa_membresia_update',name='activa_membresia_update_view'),
 	
 	url(r'^membresia.menor/$','menores_edad_all',name='menores_edad_view'),
-	url(r'^membresia.menor/nuevo$','menores_edad_nuevo',name='menores_edad_nuevo'),
+	url(r'^membresia.menor/nuevo/$','menores_edad_nuevo',name='menores_edad_nuevo'),
 	
-	url(r'^membresia.menor/pase$','compra_pase',name='compra_pase_view'),
+	url(r'^membresia.menor/pase/$','compra_pase',name='compra_pase_view'),
+	
+	# Edicion de perfil
+	url(r'^membresia.edicion/$','edit_mem',name='edicion_membresia'),
+
 
 )

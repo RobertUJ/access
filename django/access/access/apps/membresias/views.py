@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from access.apps.membresias.models import membresia,rel_mem,MenoresEdad,PaseMenor
 from access.apps.actividades.models import actividad
 # Formularios
-from access.apps.membresias.forms import frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
+from access.apps.membresias.forms import frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
 # Librerias / Herramientas
 from string import digits, letters
 import random
@@ -32,6 +32,23 @@ def add_act(_miembro,texto=""):
 		return True
 	except Exception, e:
 		return False
+
+def edit_mem(request):
+	objMem = get_object_or_404(membresia,miembro=request.user)
+	if request.method == "POST":
+		frm = frmActualizaMembresia(request.POST,instance=objMem)
+		if frm.is_valid():
+			frm.save()
+			
+			return HttpResponseRedirect('/citas/')
+		else:
+			ctx ={'form':frm}
+	else:
+		ctx ={'form':frmActualizaMembresia(instance=objMem)}
+	return render_to_response('forms/membresia/edicion.html',ctx,context_instance=RequestContext(request))
+
+
+
 
 def compra_membresia_online(request):
 	if request.method == "POST":
