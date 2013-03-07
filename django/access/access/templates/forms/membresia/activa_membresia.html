@@ -10,9 +10,10 @@
 	<div class="separador-slider visible-desktop"></div>
 	<div class="container">
 	    <div class="row">
-
-	        	<br><br>
-				<strong>{{ mensaje }}</strong>
+ 				{% if mensaje %}
+ 					<br><br>
+ 					<strong>{{ mensaje }}</strong>
+ 				{% endif %}
 				<h1 class="mod-head"><span>Formulario de activación de membresia</span></h1>
 				<hr>
 				<div class="form-full">

@@ -77,6 +77,57 @@ def validate_username_unique(value):
 		raise ValidationError(u'El nombre de usuario "%s" ya existe. ' % value)
 
 
+class UserEditForm(ModelForm):
+    class meta:
+        model = User
+ 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(UserEditForm, self).__init__(*args, **kwargs)
+    
+
+
+
+class editUserFrm(forms.Form):
+	username	=	forms.CharField(
+		max_length=20,
+		widget=forms.TextInput(
+			attrs={'class':'','placeholder':'','readonly':'readonly'},
+		),
+		required=True,
+		min_length=4,
+		validators=[validate_username_unique],
+		label="Crea tu Usuario",
+	)
+	password 	= 	forms.CharField(
+		max_length=20,
+		min_length=4,
+		widget=forms.PasswordInput(
+			attrs={'class':'','placeholder':''},
+		),
+		required=True,
+		label="Crea tu Contraseña",
+	)
+	repassword 	= 	forms.CharField(
+		max_length=20,
+		min_length=4,
+		widget=forms.PasswordInput(
+			attrs={'class':'','placeholder':''},
+		),
+		required=True,
+		label="Confirma tu contraseña",
+	)
+
+	def clean(self):
+ 		''' Required custom validation for the form. '''
+ 		super(forms.Form,self).clean()
+ 		if 'password' in self.cleaned_data and 'repassword' in self.cleaned_data:
+ 			if self.cleaned_data['password'] != self.cleaned_data['repassword']:
+ 				self._errors['password'] = [u'Passwords must match.']
+				self._errors['repassword'] = [u'Password must match']
+		return self.cleaned_data
+
+
 class registerUserFrm(forms.Form):
 	username	=	forms.CharField(
 		max_length=20,

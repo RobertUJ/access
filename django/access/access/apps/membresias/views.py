@@ -2,14 +2,14 @@
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from django.http import HttpResponse , HttpResponseRedirect
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 #Modelos 
 from django.contrib.auth.models import User
 from access.apps.membresias.models import membresia,rel_mem,MenoresEdad,PaseMenor
 from access.apps.actividades.models import actividad
 # Formularios
-from access.apps.membresias.forms import frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
+from access.apps.membresias.forms import UserEditForm,editUserFrm,frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
+from django.contrib.auth.forms import PasswordChangeForm
 # Librerias / Herramientas
 from string import digits, letters
 import random
@@ -33,19 +33,45 @@ def add_act(_miembro,texto=""):
 	except Exception, e:
 		return False
 
+@login_required
 def edit_mem(request):
 	objMem = get_object_or_404(membresia,miembro=request.user)
 	if request.method == "POST":
-		frm = frmActualizaMembresia(request.POST,instance=objMem)
+		frm = frmActualizaMembresia(request.POST ,instance=objMem)
 		if frm.is_valid():
 			frm.save()
-			
+
+			nombre = frm.cleaned_data.get('nombre')
+			apaterno = frm.cleaned_data.get('apellido_paterno')
+			amaterno = frm.cleaned_data.get('apellido_materno')
+			email = frm.cleaned_data.get('email')
+
+			_usr = User.objects.get(pk=request.user.pk)
+			_usr.first_name = u"%s" % nombre
+			_usr.last_name = u"%s %s" %(apaterno, amaterno)
+			_usr.email = u"%s" % email
+			_usr.save()
+
 			return HttpResponseRedirect('/citas/')
 		else:
 			ctx ={'form':frm}
 	else:
 		ctx ={'form':frmActualizaMembresia(instance=objMem)}
 	return render_to_response('forms/membresia/edicion.html',ctx,context_instance=RequestContext(request))
+
+@login_required
+def reset_pass(request):
+	if request.method == 'POST':
+		form = PasswordChangeForm(request.user,data=request.POST)
+		if form.is_valid():
+			form.save()
+			ctx = {'msg':'Su nueva contraseña se ha guardado satisfactoriamente'}
+			return render_to_response('forms/membresia/reset_pass.html',ctx,context_instance=RequestContext(request))
+		else:
+			ctx = {'frm':form}
+	else:
+		ctx = {'frm':PasswordChangeForm(request.user)}
+	return render_to_response('forms/membresia/reset_pass.html',ctx,context_instance=RequestContext(request))
 
 
 
@@ -239,8 +265,7 @@ def activa_membresia_update(request):
 			frmAdicional.membresia = objMembresia
 			frmAdicional.save()
 			# Envio de email de confirmacion de registro
-			_envia_email_registro(new_user)
-			
+			_envia_email_registro(new_user)			
 			# Se redirecciona al login para usuarios
 			return HttpResponseRedirect("/usuarios/login/")
 		ctx = {'frmActiva':frm,'frmR':frmReg}

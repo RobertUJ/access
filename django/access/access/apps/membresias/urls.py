@@ -21,6 +21,7 @@ urlpatterns = patterns('access.apps.membresias.views',
 	
 	# Edicion de perfil
 	url(r'^membresia.edicion/$','edit_mem',name='edicion_membresia'),
+	url(r'^membresia.edicion/pass$','reset_pass',name='reset_pass'),
 
 
 )

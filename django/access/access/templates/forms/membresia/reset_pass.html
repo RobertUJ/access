@@ -1,0 +1,102 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Edicion de Perfil {% endblock %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        	<h1 class="mod-head"><span id="msg">Contraseña</span></h1>
+	        	<div class="form-full">
+				
+{% if msg %}
+<div class="offset2 span8">
+	<h3>{{msg}} <a class='btn btn-large btn-danger' href=" {% url edicion_membresia %} ">Regresar</a></h3>
+</div>
+{% else %}
+				<form action="" method="POST">
+					{% csrf_token %}
+				<div class="offset4 span4">
+					<fieldset>
+					<h3 class="mod-head">Modificar contraseña</h3>
+						{# Print form username and password #}
+						
+							
+
+							{% for f in frm  %}
+								
+								<div class="control-group {% if f.errors %}error{% endif %}">
+									<label class="control-label {% if f.errors %}error{% endif %}">
+										{{f.label_tag}}
+									</label>
+									<div class="controls">
+										{{ f }}
+										{% if f.errors %}
+											<span class="help-inline">{{f.errors}}</span>
+										{% endif %}
+									</div>
+								</div>
+							{% endfor %}	
+						
+								
+					</fieldset>
+				</div>
+				<div class="full">
+					<input type="submit" value="Guardar nueva contraseña" class="submit">
+				</div>
+				</form>
+{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+{% block extra_js %}
+
+<script type="text/javascript">
+function soloNumeros(evt){
+	//asignamos el valor de la tecla a keynum
+	if(window.event){// IE
+		keynum = evt.keyCode;
+	}else{
+		keynum = evt.which;
+	}
+	//comprobamos si se encuentra en el rango
+	if(keynum>47 && keynum<58){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+function inicio()
+{
+	$("#id_tipo").val({{tipo}});
+	var texto = $("#id_tipo").find("option:selected").text();
+	$("#msg").html("Compra de membresia Call Center " + texto);
+
+	$("#id_cp").attr("maxlength","5");
+	$("#id_area").attr("maxlength","3");
+	$("#id_lada").attr("maxlength","3");
+	$("#id_telefono").attr("maxlength","8");
+
+
+	$("#id_cp").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_lada").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_area").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+	$("#id_telefono").on("keypress",function(e){
+		return soloNumeros(e);
+	});
+}
+$(document).on("ready",inicio);
+
+
+
+</script>	
+{% endblock extra_js %}
