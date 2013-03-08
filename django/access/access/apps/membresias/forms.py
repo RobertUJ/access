@@ -27,13 +27,50 @@ class frmCantidad(forms.Form):
 	cantidad = forms.IntegerField(
 		label='Cantidad de membresias a comprar',
 		required=True)
-	
+		
+		
+
 
 
 class frmComMem(forms.ModelForm):
+	nombre = forms.CharField(
+		widget=forms.TextInput(
+			attrs={'class':'input-medium',}
+		),
+		label='Nombre(s):',
+	)
+	apellido_paterno = forms.CharField(
+		widget=forms.TextInput(
+			attrs={'class':'input-medium',}
+		),
+		label='Apellido Paterno:',
+	)
+	apellido_materno = forms.CharField(
+		widget=forms.TextInput(
+			attrs={'class':'input-medium',}
+		),
+		label='Apellido Materno:',
+	)
+	email = forms.EmailField(
+		widget=forms.TextInput(
+			attrs={'class':'input-medium',}
+		),
+		label='Email:',
+	)
+	re_email = forms.EmailField(
+		widget=forms.TextInput(
+			attrs={'class':'input-medium',}
+		),
+		label='Re-Ingresa tu email:',
+	)
+	
+	def __init__(self, *arg, **kwarg):
+		super(frmComMem, self).__init__(*arg, **kwarg)
+		self.empty_permitted = False
+
 	def clean(self):
 		''' Required custom validation for the form. '''
-		super(ModelForm,self).clean()
+		super(frmComMem,self).clean()
 		if 'email' in self.cleaned_data and 're_email' in self.cleaned_data:
 			if self.cleaned_data.get('email') != self.cleaned_data.get('re_email'):
 				self._errors['email'] = self.error_class([u'Los campos de correos electrónico deben coincidir.'])
@@ -42,7 +79,7 @@ class frmComMem(forms.ModelForm):
 
 	class Meta:
 		model = membresia
-		fields = ['tipo', 'nombre','apellido_paterno','apellido_materno','email','re_email',]
+		fields = ['nombre','apellido_paterno','apellido_materno','email','re_email',]
 		# exclude = [ 'call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
 
 

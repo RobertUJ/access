@@ -10,6 +10,8 @@ from access.apps.actividades.models import actividad
 # Formularios
 from access.apps.membresias.forms import frmComMem,UserEditForm,editUserFrm,frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
 from django.contrib.auth.forms import PasswordChangeForm
+from django.forms.formsets import formset_factory
+
 # Librerias / Herramientas
 from string import digits, letters
 import random
@@ -89,28 +91,90 @@ def compra_cantidad(request):
 
 
 def compra_multiple(request,cant=0):
-	from django.forms.formsets import formset_factory
-	idtipo = 1
 	cantidad = int(cant)
-	MemFormSet = formset_factory(frmComMem,extra=cantidad - 1)
-	
-	
-
+	if cantidad > 9 or cantidad < 1:
+		return HttpResponseRedirect('/membresia.corporativa/')
+	MemFormSet = formset_factory(frmComMem,extra=cantidad)
 	if request.method == 'POST':
-		frm = frmComMem(request.POST)
+		frm = MemFormSet(request.POST)
 		if frm.is_valid():
-			newMem = frm.save(commit=False)
-			newMem.password = _pw()
-			objMembresia = newMem.save()
-			request.session['pkMem'] = newMem.id
-			return HttpResponseRedirect('/membresia.resumen/')
+			cont = 1
+			padre = 0
+			for Mem in frm:
+				NewMem = Mem.save(commit=False)
+				NewMem.tipo = 1
+				NewMem.password = _pw()
+				NewMem.costo = 1575.00
+				if cont != 1:
+					NewMem.costo = 1575 * 0.85
+					NewMem.padre = padre
+				NewMem.save()
+				if cont == 1:
+					padre = NewMem.id
+					request.session['MemPadre'] = padre
+				cont = cont + 1
+			return HttpResponseRedirect('/membresia.resumen/multiple/')
 		else:
-			objForm = frm			
+			objForm = frm	
+			ctx = {'frmSet':objForm}
+			return render_to_response('forms/membresia/compra_multiple.html',ctx,context_instance=RequestContext(request))
 	else:
-		objForm = frmComMem()
-	ctx = {'frmSet':MemFormSet,'tipo':idtipo}
-	return render_to_response('forms/membresia/compra_multiple.html',ctx,context_instance=RequestContext(request))
-	
+		objForm = MemFormSet()
+		ctx = {'frmSet':objForm}
+		return render_to_response('forms/membresia/compra_multiple.html',ctx,context_instance=RequestContext(request))
+
+
+def ResumenCompraMultiple(request):
+	idMem = int(request.session.get('MemPadre', 0))
+	try:
+		MemTitular = membresia.objects.get(pk=idMem)
+		MemCompradas = membresia.objects.filter(padre=idMem)
+	except:
+		return HttpResponseRedirect("/")
+
+	if request.method == "POST":
+		cancela = request.POST.get('cancela',"0")
+		if cancela == "1":
+			MemTitular.delete()
+			
+			if MemCompradas:
+				for mem in MemCompradas:
+					mem.delete()
+			
+			return HttpResponseRedirect("/")
+		else:
+			
+			_envia_email_compra(MemTitular)
+			
+			if MemCompradas:
+				for mem in MemCompradas:
+					_envia_email_compra(mem)
+
+			return HttpResponseRedirect("/")
+	else:
+		
+		total = 0
+		for mem in MemCompradas:
+			total += mem.costo
+
+		total += 1575
+		ctx = {'objMem':MemTitular,'objMems':MemCompradas,'tot':total}
+		return render_to_response('membresia/resumen_compra_multiple.html',ctx,context_instance=RequestContext(request))
+
+
+def EnviaEmailMultiple(objMem):
+	to_mem_dos = ""
+	try:
+		to_mem = objMem.email
+		subject = "24 Access Membresia"
+		html_content = "Bienvenido a 24Access, gracias por su compra.<br><br>Para activar entra aqui <a href='http://desarrollo.newemage.com:8888/membresia.inicio/'>http://desarrollo.newemage.com:8888/membresia.inicio/</a> <br><br> Este es tu numero de membresia %s <br> Este es tu password %s " %(objMem.id , objMem.password)
+		msg = EmailMultiAlternatives(subject,html_content,'from@server.com',[to_mem])
+		msg.attach_alternative(html_content,'text/html') #Definimos el contenido como HTML
+		msg.send() #enviamos el correo	
+		return True
+	except:
+		return False
+
 
 def compra_membresia_online(request):
 	if request.method == "POST":
@@ -128,9 +192,6 @@ def compra_membresia_online(request):
 	
 	ctx = {'form':objForm}
 	return render_to_response('forms/membresia/compra.html',ctx,context_instance=RequestContext(request))
-
-
-
 
 
 
@@ -263,8 +324,20 @@ def activa_membresia_login(request):
 			try:
 				objMem = membresia.objects.get(pk=_mem,password=_pass)
 			except:
-				objMem = None			
+				objMem = None
+	
 			if objMem:
+				if objMem.padre != 0:
+					try:
+						objPadre = membresia.objects.get(pk=objMem.padre)
+					except:
+						objPadre = None
+
+					if not objPadre.activa:
+						return render_to_response('mensaje/mensaje.html',{'objMensaje':'La membresia titular debe activar primero.'},context_instance=RequestContext(request))
+				else:
+					objPadre = None
+
 				request.session['membresia_id'] = objMem.id
 				return HttpResponseRedirect('/membresia.activa/')
 			else:

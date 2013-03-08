@@ -6,40 +6,51 @@
 <div class="separador-slider visible-desktop"></div>
 	<div class="container-fluid">
 	    <div class="row-fluid">
-        	<h1 class="mod-head"><span id="msg">Compra de membresia Call Center</span></h1>
+        	<div class="span12">
+        	<h1 class="mod-head"><span id="msg">Compra de membresia</span></h1>
+        	</div>
+        </div>
         	<div class="form-full">
-        		
-        		<form method='post' action='' name='frmCompraMembresia'>
+        		<form class="form-horizontal" method='POST' action='.' name='frmCompraMembresia'>
+        			<div class="row-fluid">
         			{% csrf_token %}
-
-        			{% for frm in frmSet.form  %}
-        				
+        			{{ frmSet.management_form }}
+        			
+        			{% for frm in frmSet.forms  %}
+        				<div class="span5">
+	        				{% if forloop.first %}
+	        					<h4>Membresia Principal No {{forloop.counter}} </h4>
+	        				{% else %}
+	        					<h4>Membresia No {{forloop.counter}}</h4>
+	        				{% endif %}
+	        				<div class="mini_form_cont">
+	        					{% for  f in  frm %}
+		    						<div class="control-group {% if f.errors %}error{% endif %}">
+		        						<label class="control-label">{{f.label_tag}}</label>
+										<div class="controls">
+		    								{{f}}
+		    								{% if f.errors %}
+		    									<span class="help-inline">{{f.errors}}</span>
+		    								{% endif %}	    								
+		    							</div>
+		    						</div>
+	        					{% endfor %}
+	        				</div>        				
+        				</div>
         			{% endfor %}
 
-        			<input type="submit" value='Comprar membresías'>
+        			</div>
+        			<div style='text-align:center;' class='btn-block'>
+        				<input class="btn btn-large btn-danger" type="submit" value='Comprar membresías'>
+        			</div>
         		</form>
 			</div>
-		</div>
+		
 	</div>
 </div>
 {% endblock contenido %}
 {% block extra_js %}
 <script type="text/javascript">
-
-	function soloNumeros(evt){
-		//asignamos el valor de la tecla a keynum
-		if(window.event){// IE
-			keynum = evt.keyCode;
-		}else{
-			keynum = evt.which;
-		}
-		//comprobamos si se encuentra en el rango
-		if(keynum>47 && keynum<58){
-			return true;
-		}else{
-			return false;
-		}
-	}
 
 	function inicio()
 	{

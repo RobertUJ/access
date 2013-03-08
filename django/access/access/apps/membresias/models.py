@@ -32,9 +32,9 @@ class membresia(models.Model):
 	''' Estos son los campos para la compra de la membresia '''
 	tipo					= models.CharField(max_length=50,choices=membresia_tipo)
 	
-	nombre 					= models.CharField(verbose_name='Nombre(s)', max_length=100)
-	apellido_paterno 		= models.CharField(verbose_name='Apellido Paterno', max_length=100)
-	apellido_materno 	 	= models.CharField(verbose_name="Apellido Materno", max_length=255)
+	nombre 					= models.CharField(null=False,blank=False, verbose_name='Nombre(s)', max_length=100)
+	apellido_paterno 		= models.CharField(null=False,blank=False, verbose_name='Apellido Paterno', max_length=100)
+	apellido_materno 	 	= models.CharField(null=False,blank=False, verbose_name="Apellido Materno", max_length=255)
 
 	calle  					= models.CharField(verbose_name='Calle',max_length=100,null=True,blank=True)
 	no_exterior				= models.CharField(verbose_name="No. Exterior",max_length=10,null=True,blank=True)
@@ -45,8 +45,8 @@ class membresia(models.Model):
 	cp 						= models.IntegerField(verbose_name='CP.',null=True,blank=True)
 	pais 					= models.CharField(verbose_name='País',max_length=150,null=True,blank=True)
 	
-	email 					= models.EmailField(verbose_name='Email principal',max_length=200)
-	re_email 		 		= models.EmailField(verbose_name='Confirma tu Mail',max_length=200)
+	email 					= models.EmailField(null=False,blank=False, verbose_name='Email principal',max_length=200)
+	re_email 		 		= models.EmailField(null=False,blank=False,verbose_name='Confirma tu Mail',max_length=200)
 	
 	area                    = models.CharField(verbose_name="Área internacinal",max_length=20,null=True,blank=True)
 	lada				    = models.CharField(verbose_name='Clave Lada',max_length=20,null=True,blank=True)
@@ -69,12 +69,14 @@ class membresia(models.Model):
 	pagada 					= models.BooleanField(default=False)
 	activa_paquete  		= models.BooleanField(default=False)
 
+	costo 					= models.FloatField(default=0.0)
+
 	class Meta:
 		verbose_name = 'membresia'
 		verbose_name_plural = 'membresias'
 		
 	def __unicode__(self):
-		return "%s"%(self.id) 
+		return "%s %s %s -- %s"%(self.nombre,self.apellido_paterno,self.apellido_materno, self.id) 
 
 class MenoresEdad(models.Model):
 	titular          = models.ForeignKey(User,related_name="Titulares")

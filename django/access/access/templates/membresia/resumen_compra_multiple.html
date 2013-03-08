@@ -1,0 +1,98 @@
+{% extends "base/template_base.html" %}
+
+{% block title %} Compra de Membresia {% endblock %}
+
+{% block contenido %}
+	<div class="separador-slider visible-desktop"></div>
+	<div class="container">
+	    <div class="row">
+	        <div class="span6">
+	        	<h1 class="mod-head"><span>Resumen de compra</span></h1>				
+				<div class="news-box">
+					<strong>Id Membresia Principal: {{objMem.id}} </strong>
+					<strong>Tipo:</strong>
+					{% if objMem.tipo == "1" %}
+						<strong>Personal</strong>
+					{% elif objMem.tipo == "2" %}
+						<strong>Familiar</strong>
+					{% else %}
+						<strong>Corporativa</strong>
+					{% endif %}
+					<strong>Costo: $ {{objMem.costo|floatformat:2}} dlls</strong>
+					<br>
+					<p> <strong>Nombre completo:</strong> {{objMem.nombre}} {{objMem.apellido_paterno}} {{objMem.apellido_materno}} </p>
+				</div>
+			</div>
+			<div class="span5">
+				<h3 class="mod-head two">Datos de contacto</h3>
+				<table class="table">
+					<tr>
+						<td><strong>Email:</strong></td>
+					</tr> 
+					<tr>
+						<td>{{objMem.email}}</td>
+					</tr>       
+				</table>
+			</div>
+
+			{% for m in objMems %}
+			<div class="sep_mem">
+				<div class="span6">
+		        	<div class="news-box">
+		        		<strong>Membresia Adicional No. {{forloop.counter}}</strong><br>
+						<strong>Id {{m.id}} </strong>
+						<strong>Tipo:</strong>
+						{% if m.tipo == "1" %}
+							<strong>Personal</strong>
+						{% elif m.tipo == "2" %}
+							<strong>Familiar</strong>
+						{% else %}
+							<strong>Corporativa</strong>
+						{% endif %}
+						<strong>Costo: $ {{m.costo|floatformat:2}} dlls  " -15% "</strong>
+						<br>
+						<p> <strong>Nombre completo:</strong> {{m.nombre}} {{m.apellido_paterno}} {{m.apellido_materno}} </p>
+					</div>
+				</div>
+				<div class="span5">
+					<h3 class="mod-head two">Datos de contacto</h3>
+					<table class="table">
+						<tr>
+							<td><strong>Email:</strong></td>
+						</tr> 
+						<tr>
+							<td>{{m.email}}</td>
+						</tr>       
+					</table>
+				</div>
+			</div>
+			{% endfor %}
+
+			<div class="row">
+				<div class="span12">
+					<h1>Total: $ {{tot|floatformat:2}} dlls</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="paypal-row">
+					 <img src="{{ STATIC_URL }}images/paypal-logo.jpg" />
+				</div>		
+			</div>	
+			<div class="full">
+				<form action="." method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="cancela" value="1">
+					<input type="submit" value="Cancelar" Class="submit cancel">
+				</form>
+				<form action="." method="POST">
+					{% csrf_token %}
+					<input type="hidden" name="cancela" value="0" class="cancela">
+					<input type="submit" value="Confirmar" Class="submit activa">
+				</form>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock contenido %}
+
