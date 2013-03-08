@@ -60,7 +60,7 @@ class membresia(models.Model):
 	password 				= models.CharField(verbose_name='Contraseña',max_length=250)
 	renovo_pass 			= models.BooleanField(default=False)
 	online 					= models.BooleanField(default=False)
-	padre                   = models.IntegerField(default=0)
+	padre                   = models.IntegerField(default=0,null=True,blank=True)
 
 	fecha_registro			= models.DateTimeField(auto_now_add=True)
 	fecha_envio				= models.DateField(null=True,blank=True)
@@ -69,7 +69,7 @@ class membresia(models.Model):
 	pagada 					= models.BooleanField(default=False)
 	activa_paquete  		= models.BooleanField(default=False)
 
-	costo 					= models.FloatField(default=0.0)
+	costo 					= models.FloatField(default=0,null=True,blank=True)
 
 	class Meta:
 		verbose_name = 'membresia'

@@ -38,28 +38,28 @@ def add_act(_miembro,texto=""):
 @login_required
 def edit_mem(request):
 	objMem = get_object_or_404(membresia,miembro=request.user)
-	if request.method == "POST":
+	if request.method == 'POST':
 		frm = frmActualizaMembresia(request.POST ,instance=objMem)
 		if frm.is_valid():
 			frm.save()
-
+			
 			nombre = frm.cleaned_data.get('nombre')
 			apaterno = frm.cleaned_data.get('apellido_paterno')
 			amaterno = frm.cleaned_data.get('apellido_materno')
 			email = frm.cleaned_data.get('email')
 
 			_usr = User.objects.get(pk=request.user.pk)
-			_usr.first_name = u"%s" % nombre
-			_usr.last_name = u"%s %s" %(apaterno, amaterno)
-			_usr.email = u"%s" % email
+			_usr.first_name = "%s" % nombre
+			_usr.last_name = "%s %s" %(apaterno, amaterno)
+			_usr.email = "%s" % email
 			_usr.save()
-
 			return HttpResponseRedirect('/citas/')
 		else:
 			ctx ={'form':frm}
+			return render_to_response('forms/membresia/edicion.html',ctx,context_instance=RequestContext(request))
 	else:
 		ctx ={'form':frmActualizaMembresia(instance=objMem)}
-	return render_to_response('forms/membresia/edicion.html',ctx,context_instance=RequestContext(request))
+		return render_to_response('forms/membresia/edicion.html',ctx,context_instance=RequestContext(request))
 
 @login_required
 def reset_pass(request):

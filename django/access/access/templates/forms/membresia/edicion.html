@@ -9,11 +9,11 @@
 	        
 	        	<h1 class="mod-head"><span id="msg">Compra de membresia Call Center</span></h1>
 	        	<div class="form-full">
-				<form action="" method="POST">
-					{% csrf_token %}
+		<form action="/membresia.edicion/" method="POST" name='edit_info'>
+		{% csrf_token %}
 				<div class="span4">
 				<fieldset>
-					
+					{{form.errors}}
 				
 				<!-- *********************************  -->
 				<h3 class="mod-head">Datos de usuario</h3>
@@ -176,7 +176,6 @@
 	<h3 class="mod-head">Datos de contacto</h3>
 				<fieldset>
 
-
 				<div class="control-group {% if form.email.errors %}error{% endif %}">
 					<label class="control-label {% if form.email.errors %}error{% endif %}">
 						{{form.email.label_tag}}
@@ -240,10 +239,9 @@
 					</div>
 				</div>
 				</fieldset>
-</div>
+			</div>
 
 
-					<!--{{form.as_p}}-->
 					<div class="full">
 					<a class='btn btn-danger btn-large' href="/membresia.edicion/pass">Cambiar contraseña</a>	
 					<input type="submit" value="Guardar Información" class="submit compra">
