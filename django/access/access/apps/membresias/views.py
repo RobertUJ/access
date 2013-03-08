@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from access.apps.membresias.models import membresia,rel_mem,MenoresEdad,PaseMenor
 from access.apps.actividades.models import actividad
 # Formularios
-from access.apps.membresias.forms import UserEditForm,editUserFrm,frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
+from access.apps.membresias.forms import frmComMem,UserEditForm,editUserFrm,frmActualizaMembresia,frmMenoresEdad,frmCompraMembresiaOnline,frmCompraMembresiaCallCenter,frmActivaMembresia,frmInfoActivacion,registerUserFrm,frmPaseMenor
 from django.contrib.auth.forms import PasswordChangeForm
 # Librerias / Herramientas
 from string import digits, letters
@@ -74,7 +74,43 @@ def reset_pass(request):
 	return render_to_response('forms/membresia/reset_pass.html',ctx,context_instance=RequestContext(request))
 
 
+def compra_cantidad(request):
+	from access.apps.membresias.forms import frmCantidad
+	if request.method == 'POST':
+		frm =frmCantidad(request.POST)
+		if frm.is_valid():
+			cantidad = frm.cleaned_data.get('cantidad',0)
+			return HttpResponseRedirect('/membresia.compra/%s/'%cantidad)
+		else:
+			ctx = {'form':frm}
+	else:
+		ctx = {'form':frmCantidad}
+	return render_to_response('forms/membresia/cantidad.html',ctx,context_instance=RequestContext(request))
 
+
+def compra_multiple(request,cant=0):
+	from django.forms.formsets import formset_factory
+	idtipo = 1
+	cantidad = int(cant)
+	MemFormSet = formset_factory(frmComMem,extra=cantidad - 1)
+	
+	
+
+	if request.method == 'POST':
+		frm = frmComMem(request.POST)
+		if frm.is_valid():
+			newMem = frm.save(commit=False)
+			newMem.password = _pw()
+			objMembresia = newMem.save()
+			request.session['pkMem'] = newMem.id
+			return HttpResponseRedirect('/membresia.resumen/')
+		else:
+			objForm = frm			
+	else:
+		objForm = frmComMem()
+	ctx = {'frmSet':MemFormSet,'tipo':idtipo}
+	return render_to_response('forms/membresia/compra_multiple.html',ctx,context_instance=RequestContext(request))
+	
 
 def compra_membresia_online(request):
 	if request.method == "POST":
@@ -92,6 +128,11 @@ def compra_membresia_online(request):
 	
 	ctx = {'form':objForm}
 	return render_to_response('forms/membresia/compra.html',ctx,context_instance=RequestContext(request))
+
+
+
+
+
 
 def sel_tipo_mem(request):
 	return render_to_response('forms/membresia/pre_compra.html',context_instance=RequestContext(request))
@@ -115,6 +156,7 @@ def compra_membresia_call_center(request):
 	idtipo = int(request.session.get('tipo_mem',4))
 	if idtipo == 4:
 		return HttpResponseRedirect("/membresia.compra/tipo/")
+	
 	if request.method == "POST":
 		frm = frmCompraMembresiaCallCenter(request.POST)
 		if frm.is_valid():

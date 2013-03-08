@@ -6,6 +6,9 @@ urlpatterns = patterns('access.apps.membresias.views',
 	url(r'^membresia.compra/online$', 'compra_membresia_online',name='compra_membresia_online'),
 	url(r'^membresia.compra/callcenter/$', 'compra_membresia_call_center',name='compra_membresia_callcenter'),
 	
+	url(r'^membresia.compra/cantidad/$', 'compra_cantidad',name='compra_cantidad_view'),
+	url(r'^membresia.compra/(\d{1,6})/$', 'compra_multiple',name='compra_mem_multiple'),
+	
 	url(r'^membresia.referidos/$', 'referidos_vista',name='ver_referidos'),
 	url(r'^membresia.compra/referido/$', 'compra_referido',name='compra_referido_view'),
 	

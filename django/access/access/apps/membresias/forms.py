@@ -23,6 +23,28 @@ class frmCompraMembresiaCallCenter(forms.ModelForm):
 		fields = ['tipo', 'nombre','apellido_paterno','apellido_materno','email','re_email',]
 		# exclude = [ 'call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
 
+class frmCantidad(forms.Form):
+	cantidad = forms.IntegerField(
+		label='Cantidad de membresias a comprar',
+		required=True)
+	
+
+
+class frmComMem(forms.ModelForm):
+	def clean(self):
+		''' Required custom validation for the form. '''
+		super(ModelForm,self).clean()
+		if 'email' in self.cleaned_data and 're_email' in self.cleaned_data:
+			if self.cleaned_data.get('email') != self.cleaned_data.get('re_email'):
+				self._errors['email'] = self.error_class([u'Los campos de correos electrónico deben coincidir.'])
+				self._errors['re_email'] = self.error_class([u'Los campos de correos electrónico deben coincidir.'])
+		return self.cleaned_data
+
+	class Meta:
+		model = membresia
+		fields = ['tipo', 'nombre','apellido_paterno','apellido_materno','email','re_email',]
+		# exclude = [ 'call_center','miembro','password','online','renovo_pass','fecha_registro','fecha_envio','fecha_recibo','activa','activa_paquete',]
+
 
 class frmCompraAdicional(forms.ModelForm):
 	def clean(self):

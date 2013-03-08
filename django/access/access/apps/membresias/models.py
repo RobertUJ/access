@@ -60,6 +60,7 @@ class membresia(models.Model):
 	password 				= models.CharField(verbose_name='Contraseña',max_length=250)
 	renovo_pass 			= models.BooleanField(default=False)
 	online 					= models.BooleanField(default=False)
+	padre                   = models.IntegerField(default=0)
 
 	fecha_registro			= models.DateTimeField(auto_now_add=True)
 	fecha_envio				= models.DateField(null=True,blank=True)
