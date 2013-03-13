@@ -17,6 +17,7 @@ from string import digits, letters
 import random
 from random import choice
 from django.core.mail import EmailMultiAlternatives 
+import datetime
 
 ''' Herramientas '''
 def _pw(length=5):
@@ -98,22 +99,42 @@ def compra_multiple(request,cant=0):
 	if request.method == 'POST':
 		frm = MemFormSet(request.POST)
 		if frm.is_valid():
-			cont = 1
-			padre = 0
-			for Mem in frm:
-				NewMem = Mem.save(commit=False)
-				NewMem.tipo = 1
-				NewMem.password = _pw()
-				NewMem.costo = 1575.00
-				if cont != 1:
-					NewMem.costo = 1575 * 0.85
-					NewMem.padre = padre
-				NewMem.save()
-				if cont == 1:
-					padre = NewMem.id
-					request.session['MemPadre'] = padre
-				cont = cont + 1
-			return HttpResponseRedirect('/membresia.resumen/multiple/')
+			if request.user.is_authenticated():
+				objMem = get_object_or_404(membresia,miembro=request.user)
+				idsMemCompradas = []
+				for Mem in frm:
+					NewMem = Mem.save(commit=False)
+					NewMem.tipo = 1
+					NewMem.password = _pw()
+					NewMem.costo = 1575.00 * 0.85
+					NewMem.padre = objMem.id
+					NewMem.save()
+					idsMemCompradas.append(NewMem.id)
+					# Se agrega relacion de titular y referido
+					objRel = rel_mem(titular=request.user,mem_titular=objMem,mem_referido=NewMem)
+					objRel.save()
+				
+				request.session['memcompradas'] = idsMemCompradas
+				print idsMemCompradas
+				request.session['MemPadre'] = objMem.id
+				return HttpResponseRedirect('/membresia.resumen/multiple/')
+			else:
+				cont = 1
+				padre = 0
+				for Mem in frm:
+					NewMem = Mem.save(commit=False)
+					NewMem.tipo = 1
+					NewMem.password = _pw()
+					NewMem.costo = 1575.00
+					if cont != 1:
+						NewMem.costo = 1575 * 0.85
+						NewMem.padre = padre
+					NewMem.save()
+					if cont == 1:
+						padre = NewMem.id
+						request.session['MemPadre'] = padre
+					cont = cont + 1
+				return HttpResponseRedirect('/membresia.resumen/multiple/')
 		else:
 			objForm = frm	
 			ctx = {'frmSet':objForm}
@@ -128,7 +149,11 @@ def ResumenCompraMultiple(request):
 	idMem = int(request.session.get('MemPadre', 0))
 	try:
 		MemTitular = membresia.objects.get(pk=idMem)
-		MemCompradas = membresia.objects.filter(padre=idMem)
+		if request.user.is_authenticated():
+			listId = request.session.get('memcompradas')
+			MemCompradas = membresia.objects.filter(pk__in=listId)
+		else:
+			MemCompradas = membresia.objects.filter(padre=idMem,fecha_registro=datetime.date.today())
 	except:
 		return HttpResponseRedirect("/")
 
@@ -136,28 +161,29 @@ def ResumenCompraMultiple(request):
 		cancela = request.POST.get('cancela',"0")
 		if cancela == "1":
 			MemTitular.delete()
-			
 			if MemCompradas:
 				for mem in MemCompradas:
 					mem.delete()
-			
 			return HttpResponseRedirect("/")
 		else:
-			
-			_envia_email_compra(MemTitular)
-			
+			if not request.user.is_authenticated():
+				_envia_email_compra(MemTitular)
 			if MemCompradas:
 				for mem in MemCompradas:
 					_envia_email_compra(mem)
-
-			return HttpResponseRedirect("/")
+			if request.user.is_authenticated():
+				return HttpResponseRedirect("/membresia.referidos/")
+			else:
+				return HttpResponseRedirect("/")
 	else:
 		
 		total = 0
 		for mem in MemCompradas:
 			total += mem.costo
 
-		total += 1575
+		if not request.user.is_authenticated():
+			total += 1575
+		
 		ctx = {'objMem':MemTitular,'objMems':MemCompradas,'tot':total}
 		return render_to_response('membresia/resumen_compra_multiple.html',ctx,context_instance=RequestContext(request))
 
@@ -240,7 +266,7 @@ def referidos_vista(request):
 		objRel = rel_mem.objects.filter(titular=request.user)
 	except Exception, e:
 		objRel = None
-	ctx = {'objRel':objRel}
+	ctx = {'objRel':objRel,'rango':xrange(objRel.count(),9)}
 	return render_to_response('referidos/membresias.html',ctx,context_instance=RequestContext(request))	
 
 @login_required(login_url='/usuarios/login/')
@@ -333,8 +359,9 @@ def activa_membresia_login(request):
 					except:
 						objPadre = None
 
-					if not objPadre.activa:
-						return render_to_response('mensaje/mensaje.html',{'objMensaje':'La membresia titular debe activar primero.'},context_instance=RequestContext(request))
+					if objPadre:
+						if not objPadre.activa:
+							return render_to_response('mensaje/mensaje.html',{'objMensaje':'La membresia titular debe activar primero.'},context_instance=RequestContext(request))
 				else:
 					objPadre = None
 
@@ -379,6 +406,19 @@ def activa_membresia_update(request):
 			frmAdicional = frm.save(commit=False)
 			frmAdicional.membresia = objMembresia
 			frmAdicional.save()
+			# Agrega relaciones de membresias adicionales
+			# rel_mem
+			try:
+				MemAdicionales = membresia.objects.filter(padre=objMembresia.id)
+			except:
+				MemAdicionales = None
+
+			if MemAdicionales:
+				for MemAdicional in MemAdicionales:
+					new_rel = rel_mem(titular=new_user,mem_titular=objMembresia,mem_referido=MemAdicional)
+					new_rel.save()
+
+
 			# Envio de email de confirmacion de registro
 			_envia_email_registro(new_user)			
 			# Se redirecciona al login para usuarios

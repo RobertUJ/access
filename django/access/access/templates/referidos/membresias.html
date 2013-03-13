@@ -36,19 +36,20 @@
                     <span>Membresias:  {{objRel|length}} de 9</span>
                   </div>
 	        	  
+                  {% if rango %}
+                    <form class='form-inline pull-right' action='/membresia.compra/cantidad/' method='POST' name='frmCompraMembresias'>
+                        {% csrf_token %}
+                        <select style="margin-right:10px;" class="input-small" name="cantidad" id="id_num_mem">
+                            {% for x in rango %}
+                               <option value='{{forloop.counter}}'>{{forloop.counter}}</option> 
+                            {% endfor %}
+                        </select>
+                        <input class='btn btn-danger' type='submit' name='btnSubmit' value='Comprar membresias adicionales'>
+                    </form> 
+                  {% else %}
+                    <h5 class="pull-right">Comuníquese con uno de nuestros asesores para compra de más membresías</h5>
+                  {% endif %}
                   
-                    <a id="btnCompra" class="btn btn-danger pull-right" href=" {% url compra_referido_view %} ">Comprar membresias adicionales</a>
-                    <select style="margin-right:10px;" class="pull-right" name="num_mem" id="id_num_mem">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                    </select>
 
                 </div>
             	<hr>

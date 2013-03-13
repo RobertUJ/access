@@ -62,7 +62,7 @@ class membresia(models.Model):
 	online 					= models.BooleanField(default=False)
 	padre                   = models.IntegerField(default=0,null=True,blank=True)
 
-	fecha_registro			= models.DateTimeField(auto_now_add=True)
+	fecha_registro			= models.DateField(auto_now_add=True)
 	fecha_envio				= models.DateField(null=True,blank=True)
 	fecha_recibo			= models.DateField(null=True,blank=True)
 	activa 				    = models.BooleanField(default=False)
@@ -104,9 +104,9 @@ class PaseMenor(models.Model):
 
 
 class rel_mem(models.Model):
-	titular      = models.ForeignKey(User,related_name="Usuario Titular")
-	mem_titular  = models.ForeignKey(membresia,related_name="Membresia Titular")
-	mem_referido = models.ForeignKey(membresia,related_name="Membresia Referida")
+	titular      = models.ForeignKey(User,related_name="UsuarioTitular")
+	mem_titular  = models.ForeignKey(membresia,related_name="MembresiaTitular")
+	mem_referido = models.ForeignKey(membresia,related_name="MembresiaReferida")
 	fecha_hora   = models.DateTimeField(auto_now_add=True)
 	
 	def __unicode__(self):
